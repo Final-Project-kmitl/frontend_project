@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:project/core/common/helper/navigation/app_navigation.dart';
+import 'package:project/core/common/pages/combination_page.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
 
@@ -16,10 +18,14 @@ class HomePage extends StatelessWidget {
           children: [
             TextField(
               decoration: InputDecoration(
-                  hintText: "Email", hintStyle: TextStyle(fontSize: 18)),
+                  hintText: "Email",
+                  hintStyle:
+                      TextThemes.bodyBold.copyWith(color: AppColors.darkGrey)),
             ),
             ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  AppNavigator.push(context, CombinationPage());
+                },
                 child: Text("data", style: TextThemes.bodyBold),
                 style: ButtonThemes.backwardButton)
           ],

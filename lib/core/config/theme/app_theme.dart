@@ -76,7 +76,7 @@ class AppTheme {
         borderSide: BorderSide(width: 3, color: AppColors.beige),
       ),
       fillColor: AppColors.white,
-      hintStyle: TextStyle(color: AppColors.grey),
+      hintStyle: TextThemes.body.copyWith(color: AppColors.grey),
     ),
   );
 }

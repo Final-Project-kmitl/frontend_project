@@ -69,6 +69,7 @@ flutter:
     - assets/bottomNavigation/
     - assets/form/
     - assets/home/
+    - assets/
     - assets/icons/
     - assets/skintypequiz/
     - assets/font/IBM_Plex_Sans_Thai/

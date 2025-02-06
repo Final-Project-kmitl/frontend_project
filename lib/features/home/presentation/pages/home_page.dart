@@ -1,7 +1,16 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:project/core/common/helper/navigation/app_navigation.dart';
+import 'package:project/core/config/assets/svg_assets.dart';
+import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
+import 'package:project/features/favorite/presentation/pages/favorite_page.dart';
 import 'package:project/features/home/presentation/widgets/category_section.dart';
 import 'package:project/features/home/presentation/widgets/suggestion_section.dart';
+import 'package:project/features/profile/presentation/pages/profile_page.dart';
+import 'package:project/features/routine/presentation/pages/routine_page.dart';
 
 // bottomNavigationBar: Stack(
 //   clipBehavior: Clip.none,
@@ -94,6 +103,11 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   ScrollController _checkScrollController = ScrollController();
+  bool _isBottomNavSolid = false;
+  bool _blocBottomNavSolid = false;
+  PageController? _pageController;
+  int _currentPage = 0;
+  double _bottomsize = 62;
 
   @override
   void dispose() {
@@ -101,88 +115,233 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
+  void _pageChange() {
+    if (_currentPage == 0) {
+      setState(() {
+        _blocBottomNavSolid = _isBottomNavSolid;
+        _isBottomNavSolid = false;
+      });
+    } else {
+      setState(() {
+        _isBottomNavSolid = _blocBottomNavSolid;
+      });
+    }
+  }
+
+  void _onScroll() {
+    if (_checkScrollController.position.pixels >=
+        _checkScrollController.position.maxScrollExtent - _bottomsize - 20) {
+      if (!_isBottomNavSolid) {
+        setState(() {
+          _isBottomNavSolid = true;
+        });
+      }
+    } else {
+      if (_isBottomNavSolid) {
+        setState(() {
+          _isBottomNavSolid = false;
+        });
+      }
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: 0);
+    _checkScrollController.addListener(_onScroll);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        bottom: false,
-        child: CustomScrollView(
-          controller: _checkScrollController,
-          slivers: [
-            SliverAppBar(
-              backgroundColor: Colors.white,
-              title: Text(
-                "หน้าหลัก",
-                style: TextThemes.headline1,
-              ),
-              floating: false,
-              // pinned: true,
-            ),
-            SliverPersistentHeader(
-              delegate: _SliverAppBarDelegate(
-                minHeight: 60.0,
-                maxHeight: 60.0,
-                child: Material(
-                  elevation: 0,
-                  color: Colors.white,
-                  shape: const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.only(
-                      bottomLeft: Radius.circular(16),
-                      bottomRight: Radius.circular(16),
-                    ),
+      body: Stack(
+        children: [
+          PageView(
+            physics: NeverScrollableScrollPhysics(),
+            controller: _pageController,
+            children: [
+              SafeArea(
+                bottom: false,
+                child: NotificationListener<ScrollNotification>(
+                  onNotification: (ScrollNotification scrollInfo) {
+                    _onScroll();
+                    return false;
+                  },
+                  child: CustomScrollView(
+                    controller: _checkScrollController,
+                    slivers: [
+                      const SliverAppBar(
+                        backgroundColor: Colors.white,
+                        title: Text(
+                          "หน้าหลัก",
+                          style: TextThemes.headline1,
+                        ),
+                        floating: false,
+                      ),
+                      SliverPersistentHeader(
+                        delegate: _SliverAppBarDelegate(
+                          minHeight: 60.0,
+                          maxHeight: 60.0,
+                          child: Material(
+                            elevation: 0,
+                            color: Colors.white,
+                            shape: const RoundedRectangleBorder(
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(16),
+                                bottomRight: Radius.circular(16),
+                              ),
+                            ),
+                            child: Container(
+                              padding: const EdgeInsets.only(
+                                  left: 20, right: 20, bottom: 20),
+                              child: TextField(
+                                onTap: () {},
+                                readOnly: true,
+                                decoration: InputDecoration(
+                                    prefixIcon: const Icon(Icons.search),
+                                    hintText:
+                                        'ค้นหาชื่อผลิตภัณฑ์, ยี่ห้อ, ส่วนประกอบ',
+                                    contentPadding: const EdgeInsets.symmetric(
+                                        horizontal: 20),
+                                    fillColor: Colors.white,
+                                    filled: true,
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(1000),
+                                      borderSide: const BorderSide(
+                                          color: Color(0xffE1D7CE)),
+                                    ),
+                                    enabledBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(1000),
+                                      borderSide: const BorderSide(
+                                          color: Color(0xffE1D7CE)),
+                                    ),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(1000),
+                                      borderSide: const BorderSide(
+                                          color: Color(0xffE1D7CE), width: 2),
+                                    )),
+                              ),
+                            ),
+                          ),
+                        ),
+                        pinned: true,
+                      ),
+                      const SliverToBoxAdapter(
+                        child: CategorySection(),
+                      ),
+                      const SliverToBoxAdapter(
+                        child: SuggestionSection(),
+                      ),
+                      const SliverToBoxAdapter(
+                        child: SuggestionSection(),
+                      ),
+                      const SliverToBoxAdapter(
+                        child: SuggestionSection(),
+                      ),
+                      SliverToBoxAdapter(
+                        child: SizedBox(
+                          height: _bottomsize + 30,
+                        ),
+                      )
+                    ],
                   ),
+                ),
+              ),
+              FavoritePage(),
+              ProfilePage(),
+            ],
+          ),
+          Positioned(
+            left: 20,
+            right: 20,
+            bottom: 20, // ปรับตำแหน่งลอยขึ้น
+            child: AnimatedContainer(
+              margin: EdgeInsets.only(bottom: _isBottomNavSolid ? 0 : 20),
+              duration: const Duration(milliseconds: 300),
+              child: ClipRect(
+                child: BackdropFilter(
+                  filter: ImageFilter.blur(sigmaX: 3, sigmaY: 3),
                   child: Container(
-                    padding:
-                        const EdgeInsets.only(left: 20, right: 20, bottom: 20),
-                    child: TextField(
-                      onTap: () {},
-                      readOnly: true,
-                      decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search),
-                          hintText: 'ค้นหาชื่อผลิตภัณฑ์, ยี่ห้อ, ส่วนประกอบ',
-                          contentPadding: EdgeInsets.symmetric(horizontal: 20),
-                          fillColor: Colors.white,
-                          filled: true,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(1000),
-                            borderSide: BorderSide(color: Color(0xffE1D7CE)),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    height: _bottomsize,
+                    decoration: BoxDecoration(
+                      color: _isBottomNavSolid
+                          ? AppColors.white
+                          : AppColors.white.withOpacity(0.7),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        IconButton(
+                            icon: SvgPicture.asset(
+                              SvgAssets.navigatorHome,
+                              color: _currentPage == 0
+                                  ? AppColors.black
+                                  : AppColors.darkGrey,
+                            ),
+                            onPressed: () {
+                              if (_currentPage != 0) {
+                                _pageController!.jumpToPage(0);
+                                setState(() => _currentPage = 0);
+                              }
+                              _pageChange();
+                            }),
+                        IconButton(
+                          icon: SvgPicture.asset(
+                            SvgAssets.navigatorRoutine,
+                            color: AppColors.darkGrey,
                           ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(1000),
-                            borderSide: BorderSide(color: Color(0xffE1D7CE)),
+                          onPressed: () {
+                            AppNavigator.push(context, RoutinePage());
+                          },
+                        ),
+                        FloatingActionButton(
+                          elevation: 0,
+                          onPressed: () {},
+                          backgroundColor: Colors.black,
+                          child: SvgPicture.asset(
+                            SvgAssets.navigatorScan,
                           ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(1000),
-                            borderSide:
-                                BorderSide(color: Color(0xffE1D7CE), width: 2),
-                          )),
+                        ),
+                        IconButton(
+                            icon: SvgPicture.asset(
+                              SvgAssets.navigatorFav,
+                              color: _currentPage == 1
+                                  ? AppColors.black
+                                  : AppColors.darkGrey,
+                            ),
+                            onPressed: () {
+                              _pageController!.jumpToPage(1);
+                              setState(() {
+                                _currentPage = 1;
+                              });
+                              _pageChange();
+                            }),
+                        IconButton(
+                          icon: SvgPicture.asset(
+                            SvgAssets.navigatorProfile,
+                            color: _currentPage == 2
+                                ? AppColors.black
+                                : AppColors.darkGrey,
+                          ),
+                          onPressed: () {
+                            _pageController!.jumpToPage(2);
+                            setState(() {
+                              _currentPage = 2;
+                            });
+                            _pageChange();
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ),
               ),
-              pinned: true,
             ),
-            // Add more slivers here for your content
-            SliverToBoxAdapter(
-              child: CategorySection(),
-            ),
-            SliverToBoxAdapter(
-              child: SuggestionSection(),
-            ),
-            SliverToBoxAdapter(
-              child: SuggestionSection(),
-            ),
-            SliverToBoxAdapter(
-              child: SuggestionSection(),
-            ),
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 130,
-              ),
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

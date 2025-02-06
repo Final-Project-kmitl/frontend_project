@@ -88,15 +88,15 @@ class CategorySection extends StatelessWidget {
                         child: SvgPicture.asset(categoryProductImg[index]),
                       ),
                       const SizedBox(height: 4),
-                      Container(
-                        width: 80,
-                        child: Text(
-                          categoryProduct[index],
-                          style: TextThemes.desc,
-                          textAlign: TextAlign.center,
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                          softWrap: true, // Enable soft wrapping of text
+                      Flexible(
+                        child: Container(
+                          width: 78,
+                          child: Text(
+                            categoryProduct[index],
+                            style: TextThemes.desc,
+                            textAlign: TextAlign.center,
+                            softWrap: true,
+                          ),
                         ),
                       ),
                     ],

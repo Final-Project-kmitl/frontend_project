@@ -5,38 +5,38 @@ class TextThemes {
   static const font = "IBMPlexSansThai";
   static const headline1 = TextStyle(
     fontFamily: font,
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: FontWeight.w700,
     color: AppColors.black,
   );
   static const headline2 = TextStyle(
     fontFamily: font,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: FontWeight.w600,
     color: AppColors.black,
   );
   static const bodyBold = TextStyle(
     fontFamily: font,
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: FontWeight.w600,
     color: AppColors.black,
   );
   static const body = TextStyle(
     fontFamily: font,
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: FontWeight.w400,
     color: AppColors.black,
   );
 
   static const descBold = TextStyle(
     fontFamily: font,
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: FontWeight.w500,
     color: AppColors.black,
   );
   static const desc = TextStyle(
     fontFamily: font,
-    fontSize: 14,
+    fontSize: 12,
     fontWeight: FontWeight.w400,
     color: AppColors.black,
   );

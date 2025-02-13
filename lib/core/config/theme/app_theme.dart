@@ -43,12 +43,16 @@ class TextThemes {
 }
 
 class ButtonThemes {
-  static final disableButton = ElevatedButton.styleFrom(
-      backgroundColor: AppColors.grey,
+  static final disableButton = FilledButton.styleFrom(
+      backgroundColor: AppColors.bgButtonDisable,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)));
-  static final normalButton = ElevatedButton.styleFrom(
-      backgroundColor: AppColors.black,
+  static final normalButton = FilledButton.styleFrom(
+      backgroundColor: AppColors.bgButton,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)));
+  // static final ghostButton = ElevatedButton.styleFrom(
+  //     backgroundColor: AppColors.bgButtonGhost,
+  //     shape: RoundedRectangleBorder()
+  // )
   static final backwardButton = ElevatedButton.styleFrom(
       backgroundColor: AppColors.transparent,
       shadowColor: Colors.transparent,
@@ -65,18 +69,18 @@ class AppTheme {
       filled: true,
       border: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(width: 1, color: AppColors.beige),
+        borderSide: const BorderSide(width: 1, color: AppColors.beige),
       ),
       enabledBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(width: 1, color: AppColors.beige),
+        borderSide: const BorderSide(width: 1, color: AppColors.beige),
       ),
       focusedBorder: OutlineInputBorder(
         borderRadius: BorderRadius.circular(10),
-        borderSide: BorderSide(width: 3, color: AppColors.beige),
+        borderSide: const BorderSide(width: 3, color: AppColors.beige),
       ),
       fillColor: AppColors.white,
-      hintStyle: TextStyle(color: AppColors.grey),
+      hintStyle: const TextStyle(color: AppColors.grey),
     ),
   );
 }

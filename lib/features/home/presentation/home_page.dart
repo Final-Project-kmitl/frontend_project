@@ -24,10 +24,10 @@ class HomePage extends StatelessWidget {
             ),
             ElevatedButton(
                 onPressed: () {
-                  AppNavigator.push(context, CombinationPage());
+                  AppNavigator.push(context, const CombinationPage());
                 },
-                child: Text("data", style: TextThemes.bodyBold),
-                style: ButtonThemes.backwardButton)
+                style: ButtonThemes.backwardButton,
+                child: const Text("data", style: TextThemes.bodyBold))
           ],
         ),
       ),

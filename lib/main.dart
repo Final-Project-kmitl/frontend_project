@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:project/core/config/theme/app_theme.dart';
+import 'package:project/features/profile/presentation/pages/profile_page.dart';
 import 'package:project/features/home/presentation/home_page.dart';
 import 'package:project/service_locator.dart';
+import 'package:project/features/favorite/presentation/pages/favorite_page.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:project/features/favorite/presentation/bloc/favorite_bloc.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,7 +20,12 @@ void main() {
   ));
 
   setupServiceLocator();
-  runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => FavoriteProvider(),
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -27,7 +37,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Skin',
       theme: AppTheme.appTheme,
-      home: const HomePage(),
+      home: FavoritePage(),
     );
   }
 }

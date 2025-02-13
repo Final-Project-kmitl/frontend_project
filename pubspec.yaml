@@ -72,6 +72,7 @@ flutter:
     - assets/icons/
     - assets/skintypequiz/
     - assets/font/IBM_Plex_Sans_Thai/
+    - assets/product/Frame171.png
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

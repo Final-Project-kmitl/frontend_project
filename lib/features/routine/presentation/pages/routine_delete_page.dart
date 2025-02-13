@@ -121,7 +121,17 @@ class _RoutineDeletePageState extends State<RoutineDeletePage> {
                                     state.productsRoutine.length
                                 ? true
                                 : false,
-                            onChanged: (value) {}),
+                            onChanged: (value) {
+                              setState(() {
+                                if (value == true) {
+                                  selectedIds = state.productsRoutine
+                                      .map((e) => e.id)
+                                      .toSet();
+                                } else {
+                                  selectedIds.clear();
+                                }
+                              });
+                            }),
                         Text(
                           "เลือกทั้งหมด ${state.productsRoutine.length} รายการ",
                           style: TextThemes.body,

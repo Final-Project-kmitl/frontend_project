@@ -7,15 +7,17 @@ class DeleteRoutineAppBar extends StatelessWidget
   @override
   final Size preferredSize;
   final VoidCallback fn;
+  final bool selectNotEmpty;
 
-  const DeleteRoutineAppBar({Key? key, required this.fn})
+  const DeleteRoutineAppBar(
+      {Key? key, required this.fn, required this.selectNotEmpty})
       : preferredSize = const Size.fromHeight(kToolbarHeight),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 0,
+      elevation: 1,
       backgroundColor: AppColors.white,
       actions: [
         Row(
@@ -24,7 +26,7 @@ class DeleteRoutineAppBar extends StatelessWidget
               icon: Icon(
                 Icons.delete_forever_outlined,
                 size: 24,
-                color: AppColors.red,
+                color: selectNotEmpty ? AppColors.red : AppColors.grey,
               ),
               onPressed: fn,
             ),

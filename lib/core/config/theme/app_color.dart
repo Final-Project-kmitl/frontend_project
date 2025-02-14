@@ -9,12 +9,19 @@ class AppColors {
   static const darkGrey = Color.fromARGB(255, 126, 126, 126);
   static const beige = Color.fromARGB(255, 225, 215, 206);
   static const transparent = Colors.transparent;
+  static const paleBlue = Color.fromARGB(255, 233, 242, 251);
+  static const yellow = Color.fromARGB(255, 253, 243, 233);
+  static const purple = Color.fromARGB(255, 239, 232, 250);
 
   //Element
   static const bgButtonDisable = Color.fromARGB(255, 208, 208, 208);
   static const textButtonDisable = Color.fromARGB(255, 126, 126, 126);
   static const bgButton = Colors.black;
   static const textButton = Colors.white;
+  static const bgButtonPressed = Color.fromARGB(255, 126, 126, 126);
+  static const bgButtonGhost = Colors.transparent;
+  static const textButtonGhost = Color.fromARGB(255, 34, 34, 34);
+  static const bgButtonGhostPressed = Color.fromARGB(26, 0, 0, 0);
 
   //Product Score
   static const quality_not_math = Colors.red;

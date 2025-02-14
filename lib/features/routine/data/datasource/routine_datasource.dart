@@ -5,6 +5,7 @@ import 'package:project/features/routine/data/datasource/mock_nomatch_routine.da
 import 'package:project/features/routine/data/datasource/mock_routine_product.dart';
 import 'package:project/features/routine/data/models/no_match_model.dart';
 import 'package:project/features/routine/data/models/product_model.dart';
+import 'package:project/service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
@@ -14,10 +15,9 @@ abstract class RoutineRemoteDatasource {
 }
 
 class apiServiceRoutine implements RoutineRemoteDatasource {
+  final userId = sl<SharedPreferences>().getString("userId") ?? "Default";
   @override
   Future<List<NoMatchModel>> fetchNoMatchRoutine() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final userId = await prefs.getString("user") ?? "Default";
     final url = Uri.parse("${AppUrl.routine_check_no_match}/${userId}");
 
     try {
@@ -39,8 +39,6 @@ class apiServiceRoutine implements RoutineRemoteDatasource {
 
   @override
   Future<List<ProductModel>> fetchProductRoutine() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    final userId = await prefs.getString("user") ?? "Default";
     final url = Uri.parse("${AppUrl.routine_check_product}/${userId}");
 
     try {

@@ -6,9 +6,6 @@ import 'package:project/features/favorite/presentation/bloc/favorite_bloc.dart';
 import 'package:project/features/favorite/presentation/widgets/favorite_button.dart';
 import 'package:project/features/favorite/presentation/widgets/favorite_card.dart';
 
-var name = 'OOTD Dark Spot Vitamin C Serum';
-var brand = 'OOTD';
-
 class FavoritePage extends StatefulWidget {
   const FavoritePage({super.key});
 
@@ -32,14 +29,14 @@ class _FavoritePageState extends State<FavoritePage> {
         shadowColor: Colors.transparent,
         surfaceTintColor: Colors.transparent,
         backgroundColor: AppColors.white,
-        title: Text(
+        title: const Text(
           "การกดถูกใจ",
           style: TextThemes.headline1,
         ),
       ),
       body: BlocBuilder<FavoriteBloc, FavoriteState>(builder: (context, state) {
         if (state is FavoriteLoading) {
-          return Center(
+          return const Center(
             child: CircularProgressIndicator(
               color: AppColors.black,
             ),
@@ -82,7 +79,7 @@ class _FavoritePageState extends State<FavoritePage> {
             ),
           );
         }
-        return Center(
+        return const Center(
           child: Text("data"),
         );
       }),

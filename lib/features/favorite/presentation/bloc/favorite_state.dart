@@ -13,7 +13,7 @@ final class FavoriteLoaded extends FavoriteState {
   FavoriteLoaded({required this.favorites, this.unfavList});
 
   FavoriteLoaded copyWith({
-    List<FavProductModel>? favorites,
+    List<FavProductEntities>? favorites,
     Set<int>? unfavList,
   }) {
     return FavoriteLoaded(

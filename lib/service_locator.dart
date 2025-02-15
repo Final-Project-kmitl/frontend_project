@@ -47,5 +47,8 @@ void setupServiceLocator() async {
   sl.registerLazySingleton<GetFavorite>(() => GetFavorite(sl<FavRepository>()));
   sl.registerLazySingleton<UnFavFavorite>(
       () => UnFavFavorite(sl<FavRepository>()));
-  sl.registerFactory<FavoriteBloc>(() => FavoriteBloc(sl<FavRepository>()));
+  sl.registerLazySingleton<FavoriteBloc>(() => FavoriteBloc(
+        getFavorite: sl<GetFavorite>(),
+        unFavFavorite: sl<UnFavFavorite>(),
+      ));
 }

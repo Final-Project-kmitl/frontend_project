@@ -157,8 +157,13 @@ class _HomePageState extends State<HomePage> {
             controller: _pageController,
             onPageChanged: (index) {
               if (_currentPage == 1 && index != 1) {
-                print("ออกจาก Favorite Page → ส่งรายการ unfav");
-                sl<FavoriteBloc>().add(SubmitUnfavoriteEvent());
+                final bloc = sl<FavoriteBloc>();
+                if (bloc.state is FavoriteLoaded) {
+                  print("ออกจาก Favorite Page → ส่งรายการ unfav");
+                  bloc.add(SubmitUnfavoriteEvent());
+                } else {
+                  print("State ยังไม่พร้อม ไม่ส่ง event");
+                }
               } else if (_currentPage != 1 && index == 1) {
                 print("กลับมาที่ Favorite Page → โหลดรายการใหม่");
                 sl<FavoriteBloc>().add(LoadFavoritesEvent());

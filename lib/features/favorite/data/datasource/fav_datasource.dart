@@ -50,8 +50,11 @@ class apiServiceFavorite implements FavRemoteDatasource {
       } else {
         print(productId);
         final res = await http.delete(url, body: productId);
+
+        print(res.statusCode);
       }
     } catch (e) {
+      print(e.toString());
       throw ServerFailure(e.toString());
     }
   }

@@ -9,6 +9,7 @@ import 'package:project/features/favorite/presentation/bloc/favorite_bloc.dart';
 import 'package:project/features/routine/data/datasource/routine_datasource.dart';
 import 'package:project/features/routine/data/repository/routine_repository_impl.dart';
 import 'package:project/features/routine/domain/repository/routine_repository.dart';
+import 'package:project/features/routine/domain/usecases/delete_product.dart';
 import 'package:project/features/routine/domain/usecases/get_no_match_routine.dart';
 import 'package:project/features/routine/domain/usecases/get_product_routine.dart';
 import 'package:project/features/routine/presentation/bloc/routine_bloc.dart';
@@ -32,7 +33,10 @@ void setupServiceLocator() async {
       () => GetNoMatchRoutine(routineRepository: sl<RoutineRepository>()));
   sl.registerLazySingleton<GetProductRoutine>(
       () => GetProductRoutine(routineRepository: sl<RoutineRepository>()));
+  sl.registerLazySingleton<DeleteProduct>(
+      () => DeleteProduct(routineRepository: sl<RoutineRepository>()));
   sl.registerFactory<RoutineBloc>(() => RoutineBloc(
+      deleteProduct: sl<DeleteProduct>(),
       getNoMatchRoutine: sl<GetNoMatchRoutine>(),
       getProductRoutine: sl<GetProductRoutine>()));
 

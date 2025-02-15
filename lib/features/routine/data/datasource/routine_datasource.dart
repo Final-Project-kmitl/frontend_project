@@ -12,6 +12,7 @@ import 'package:http/http.dart' as http;
 abstract class RoutineRemoteDatasource {
   Future<List<ProductModel>> fetchProductRoutine();
   Future<List<NoMatchModel>> fetchNoMatchRoutine();
+  Future<void> deleteProduct(List<int>? productId);
 }
 
 class apiServiceRoutine implements RoutineRemoteDatasource {
@@ -54,6 +55,24 @@ class apiServiceRoutine implements RoutineRemoteDatasource {
       }
     } catch (e) {
       return mockProductData;
+    }
+  }
+
+  @override
+  Future<void> deleteProduct(List<int>? productId) async {
+    final url = Uri.parse("${AppUrl.routine_delete_product}/${userId}");
+    try {
+      final res = await http.delete(url, body: productId);
+      print("PRODUCTI : ${productId}");
+
+      if (res.statusCode == 200) {
+        print("delete product from routine Succcess");
+      } else {
+        mockRoutineProduct.removeWhere((product) => product["id"] == "3");
+        print("cannot connect with backend");
+      }
+    } catch (e) {
+      print("can not delete product from routine ${e}");
     }
   }
 }

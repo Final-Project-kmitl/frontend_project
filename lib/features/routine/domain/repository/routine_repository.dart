@@ -5,4 +5,6 @@ abstract class RoutineRepository {
   Future<List<ProductEntity>> getProductRoutine();
 
   Future<List<NoMatchEntity>> getNoMatchRoutine();
+
+  Future<void> deleteProduct(List<int>? productId);
 }

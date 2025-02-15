@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:project/features/routine/data/datasource/routine_datasource.dart';
 import 'package:project/features/routine/domain/entities/no_match_entity.dart';
 import 'package:project/features/routine/domain/entities/product_entity.dart';
@@ -15,5 +16,10 @@ class RoutineRepositoryImpl implements RoutineRepository {
   @override
   Future<List<ProductEntity>> getProductRoutine() async {
     return await routineRemoteDatasource.fetchProductRoutine();
+  }
+
+  @override
+  Future<void> deleteProduct(List<int>? productId) async {
+    return await routineRemoteDatasource.deleteProduct(productId);
   }
 }

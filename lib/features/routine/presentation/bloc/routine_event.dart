@@ -10,3 +10,9 @@ sealed class RoutineEvent extends Equatable {
 class LoadRoutineEvent extends RoutineEvent {}
 
 class LoadNoMatchEvent extends RoutineEvent {}
+
+class RoutineDeleteEvent extends RoutineEvent {
+  final Set<int>? productId;
+
+  RoutineDeleteEvent(this.productId);
+}

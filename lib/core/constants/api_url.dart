@@ -9,6 +9,9 @@ class AppUrl {
   // check no match in routine
   static const routine_check_no_match = "${baseUrl}/check-no-match";
 
+  //delete routine Id
+  static const routine_delete_product = "${baseUrl}/delete-product-routine";
+
   static const get_fav_product = "${baseUrl}/get-fav-prodcut";
   static const unfav = "${baseUrl}/unfav";
 }

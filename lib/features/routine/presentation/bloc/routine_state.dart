@@ -22,7 +22,10 @@ class RoutineDataLoaded extends RoutineState {
         nomatRoutine = nomatRoutine ?? [];
 
   @override
-  List<Object> get props => [productsRoutine, nomatRoutine];
+  List<Object> get props => [
+        productsRoutine,
+        nomatRoutine,
+      ];
 }
 
 final class RoutineLoadError extends RoutineState {

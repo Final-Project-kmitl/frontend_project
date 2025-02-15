@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
+import 'package:project/features/routine/domain/usecases/delete_product.dart';
 import 'package:project/features/routine/presentation/bloc/routine_bloc.dart';
 import 'package:project/features/routine/presentation/widgets/delete_routine_app_bar.dart';
 import 'package:project/service_locator.dart';
@@ -55,9 +56,12 @@ class _RoutineDeletePageState extends State<RoutineDeletePage> {
               ),
               onPressed: () async {
                 //delete with backend
-                await sl<RoutineBloc>()
-                  ..add(LoadRoutineEvent())
-                  ..add(LoadNoMatchEvent());
+                // sl<RoutineBloc>().add(RoutineDeleteEvent(selectedIds));
+                context
+                    .read<RoutineBloc>()
+                    .add(RoutineDeleteEvent(selectedIds));
+                context.read<RoutineBloc>().add(LoadRoutineEvent());
+                sl<RoutineBloc>().add(LoadRoutineEvent());
                 Navigator.pop(context); // ปิด Popup
                 Navigator.pop(context); // กลับไปหน้าก่อนหน้า
               },

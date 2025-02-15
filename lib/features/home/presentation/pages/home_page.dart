@@ -16,6 +16,7 @@ import 'package:project/features/home/presentation/widgets/suggestion_section.da
 import 'package:project/features/profile/presentation/pages/profile_page.dart';
 import 'package:project/features/routine/presentation/pages/routine_page.dart';
 import 'package:project/features/search/presentation/pages/search_page.dart';
+import 'package:project/service_locator.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -157,10 +158,10 @@ class _HomePageState extends State<HomePage> {
             onPageChanged: (index) {
               if (_currentPage == 1 && index != 1) {
                 print("ออกจาก Favorite Page → ส่งรายการ unfav");
-                context.read<FavoriteBloc>().add(SubmitUnfavoriteEvent());
+                sl<FavoriteBloc>().add(SubmitUnfavoriteEvent());
               } else if (_currentPage != 1 && index == 1) {
                 print("กลับมาที่ Favorite Page → โหลดรายการใหม่");
-                context.read<FavoriteBloc>().add(LoadFavoritesEvent());
+                sl<FavoriteBloc>().add(LoadFavoritesEvent());
               }
               print("_currentPage : ${_currentPage}");
               print("index : ${index}");

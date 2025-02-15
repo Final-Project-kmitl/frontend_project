@@ -40,7 +40,9 @@ class _FavoritePageState extends State<FavoritePage> {
       body: BlocBuilder<FavoriteBloc, FavoriteState>(builder: (context, state) {
         if (state is FavoriteLoading) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: AppColors.black,
+            ),
           );
         } else if (state is FavoriteLoaded) {
           return SafeArea(
@@ -59,16 +61,19 @@ class _FavoritePageState extends State<FavoritePage> {
                         mainAxisSpacing: 16,
                         childAspectRatio: 168.5 / 262,
                       ),
-                      itemCount: 9,
+                      itemCount: state.favorites.length,
                       itemBuilder: (context, index) {
-                        print(index);
-                        if (index == 9 || index == 9 + 1) {
-                          return Container(
-                            height: 20,
-                            color: AppColors.red,
-                          );
-                        }
-                        return FavoriteCard();
+                        final product = state.favorites[index];
+                        final isUnfav =
+                            state.unfavList?.contains(product.id) ?? false;
+                        return FavoriteCard(
+                          product: product,
+                          isUnFav: isUnfav,
+                          onToggleFavorite: () {
+                            context.read<FavoriteBloc>().add(
+                                ToggleFavoriteEvent(productId: product.id));
+                          },
+                        );
                       },
                     ),
                   ),

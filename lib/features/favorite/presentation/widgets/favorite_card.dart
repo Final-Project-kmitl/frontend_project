@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
+import 'package:project/features/favorite/data/models/fav_product_model.dart';
+import 'package:project/features/favorite/domain/entities/fav_product.dart';
 
 var testMoock = [
   {
@@ -24,7 +26,14 @@ var testMoock = [
 var rating = 75;
 
 class FavoriteCard extends StatelessWidget {
-  const FavoriteCard({super.key});
+  final FavProductEntities product;
+  final bool isUnFav;
+  final VoidCallback onToggleFavorite;
+  const FavoriteCard(
+      {super.key,
+      required this.isUnFav,
+      required this.onToggleFavorite,
+      required this.product});
 
   @override
   Widget build(BuildContext context) {
@@ -55,9 +64,11 @@ class FavoriteCard extends StatelessWidget {
                     ),
                   ),
                   Positioned(
+                    right: 3,
                     child: IconButton(
-                      onPressed: () {},
-                      icon: Icon(Icons.favorite),
+                      onPressed: onToggleFavorite,
+                      icon: Icon(
+                          isUnFav ? Icons.favorite_border : Icons.favorite),
                     ),
                   )
                 ],

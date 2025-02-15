@@ -1,11 +1,13 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:project/core/common/helper/navigation/app_navigation.dart';
 import 'package:project/core/config/assets/svg_assets.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
+import 'package:project/features/favorite/presentation/bloc/favorite_bloc.dart';
 import 'package:project/features/favorite/presentation/pages/favorite_page.dart';
 import 'package:project/features/home/presentation/widgets/category_section.dart';
 import 'package:project/features/home/presentation/widgets/search_box.dart';
@@ -152,6 +154,18 @@ class _HomePageState extends State<HomePage> {
           PageView(
             physics: const NeverScrollableScrollPhysics(),
             controller: _pageController,
+            onPageChanged: (index) {
+              if (_currentPage == 1 && index != 1) {
+                print("ออกจาก Favorite Page → ส่งรายการ unfav");
+                context.read<FavoriteBloc>().add(SubmitUnfavoriteEvent());
+              } else if (_currentPage != 1 && index == 1) {
+                print("กลับมาที่ Favorite Page → โหลดรายการใหม่");
+                context.read<FavoriteBloc>().add(LoadFavoritesEvent());
+              }
+              print("_currentPage : ${_currentPage}");
+              print("index : ${index}");
+              _currentPage = index;
+            },
             children: [
               SafeArea(
                 bottom: false,

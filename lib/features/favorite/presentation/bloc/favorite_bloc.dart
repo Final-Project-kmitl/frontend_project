@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
 import 'package:project/features/favorite/data/models/fav_product_model.dart';
@@ -55,6 +56,7 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
   Future<void> _onSubmitUnfavorite(
       SubmitUnfavoriteEvent event, Emitter<FavoriteState> emit) async {
     final currentState = state;
+    print("cure : ${currentState}");
     if (currentState is FavoriteLoaded &&
         (currentState.unfavList?.isNotEmpty ?? false)) {
       try {

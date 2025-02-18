@@ -5,9 +5,11 @@ import 'package:project/core/config/theme/app_theme.dart';
 import 'package:project/features/favorite/presentation/bloc/favorite_bloc.dart';
 import 'package:project/features/home/presentation/pages/home_page.dart';
 import 'package:project/features/routine/presentation/bloc/routine_bloc.dart';
+import 'package:project/features/splash/presentation/bloc/splash_bloc.dart';
+import 'package:project/features/splash/presentation/pages/splash_page.dart';
 import 'package:project/service_locator.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   //ให้มองเห็นนาฬิกาเพราะ appbar มันสีขาว
@@ -17,7 +19,7 @@ void main() {
     statusBarBrightness: Brightness.light,
   ));
 
-  setupServiceLocator();
+  await setupServiceLocator();
   runApp(MultiBlocProvider(
     providers: [
       BlocProvider<RoutineBloc>(
@@ -26,6 +28,9 @@ void main() {
       BlocProvider<FavoriteBloc>(
         create: (context) => sl<FavoriteBloc>(),
       ),
+      BlocProvider<SplashBloc>(
+        create: (context) => sl<SplashBloc>(),
+      )
     ],
     child: MyApp(),
   ));
@@ -40,7 +45,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Skin',
       theme: AppTheme.appTheme,
-      home: const HomePage(),
+      home: const SplashPage(),
     );
   }
 }

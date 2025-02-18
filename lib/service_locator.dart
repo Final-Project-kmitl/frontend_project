@@ -13,11 +13,16 @@ import 'package:project/features/routine/domain/usecases/delete_product.dart';
 import 'package:project/features/routine/domain/usecases/get_no_match_routine.dart';
 import 'package:project/features/routine/domain/usecases/get_product_routine.dart';
 import 'package:project/features/routine/presentation/bloc/routine_bloc.dart';
+import 'package:project/features/splash/data/datasources/splash_api_service.dart';
+import 'package:project/features/splash/data/repository/splash_repository_impl.dart';
+import 'package:project/features/splash/domain/repository/splash_repository.dart';
+import 'package:project/features/splash/domain/usecases/check_user.dart';
+import 'package:project/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
 
-void setupServiceLocator() async {
+Future<void> setupServiceLocator() async {
   sl.registerSingleton<DioClient>(DioClient());
 
   sl.registerSingletonAsync<SharedPreferences>(
@@ -51,4 +56,12 @@ void setupServiceLocator() async {
         getFavorite: sl<GetFavorite>(),
         unFavFavorite: sl<UnFavFavorite>(),
       ));
+
+  //Splash
+  sl.registerLazySingleton<SplashApiService>(() => SplashApiServiceImpl());
+  sl.registerLazySingleton<SplashRepository>(
+      () => SplashRepositoryImpl(splashApiService: sl<SplashApiService>()));
+  sl.registerLazySingleton<CheckUser>(
+      () => CheckUser(splashRepository: sl<SplashRepository>()));
+  sl.registerFactory<SplashBloc>(() => SplashBloc(checkUser: sl<CheckUser>()));
 }

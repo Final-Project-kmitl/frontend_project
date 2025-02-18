@@ -1,0 +1,27 @@
+import 'dart:io';
+import 'package:dio/dio.dart';
+
+Future<void> uploadImageDio(File imageFile) async {
+  Dio dio = Dio();
+
+  FormData formData = FormData.fromMap({
+    "image": await MultipartFile.fromFile(imageFile.path,
+        filename: imageFile.path.split('/').last),
+  });
+
+  Response response = await dio.post(
+    "https://your-api.com/upload",
+    data: formData,
+    options: Options(
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    ),
+  );
+
+  if (response.statusCode == 200) {
+    print("✅ อัปโหลดสำเร็จ!");
+  } else {
+    print("❌ อัปโหลดล้มเหลว: ${response.statusMessage}");
+  }
+}

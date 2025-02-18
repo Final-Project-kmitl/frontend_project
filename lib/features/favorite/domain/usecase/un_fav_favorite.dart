@@ -5,7 +5,6 @@ class UnFavFavorite {
   UnFavFavorite(this.favRepository);
 
   Future<void> call(Set<int> unfavId) {
-    print("usecase");
     return favRepository.unFavProduct(unfavId);
   }
 }

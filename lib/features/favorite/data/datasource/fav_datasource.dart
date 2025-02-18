@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:project/core/constants/api_url.dart';
+import 'package:project/core/constants/share_pref.dart';
 import 'package:project/core/error/server_failure.dart';
 import 'package:project/features/favorite/data/datasource/fav_mock_data.dart';
 import 'package:project/features/favorite/data/models/fav_product_model.dart';
@@ -15,7 +16,8 @@ abstract class FavRemoteDatasource {
 }
 
 class apiServiceFavorite implements FavRemoteDatasource {
-  final userId = sl<SharedPreferences>().getString("userId") ?? "Default";
+  final userId =
+      sl<SharedPreferences>().getString(shared_pref.userId) ?? "Default";
   @override
   Future<List<FavProductModel>> fetchFavProduct() async {
     final url = Uri.parse("${AppUrl.get_fav_product}/${userId}");
@@ -28,14 +30,12 @@ class apiServiceFavorite implements FavRemoteDatasource {
 
         return jsonData.map((e) => FavProductModel.fromJson(e)).toList();
       } else {
-        print("object1");
         return mockFavoriteData
             .map((e) => FavProductModel.fromJson(e))
             .toList();
         // throw Exception("Fail to load Product user Fav");
       }
     } catch (e) {
-      print("obj2");
       return mockFavoriteData.map((e) => FavProductModel.fromJson(e)).toList();
       // throw ServerFailure(e.toString());
     }

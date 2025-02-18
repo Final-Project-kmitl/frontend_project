@@ -1,6 +1,8 @@
 class AppUrl {
   static const baseUrl = 'https://catfact.ninja/fact';
 
+  static const checkUser = "${baseUrl}/user";
+
   static const signUp = "api/v1/auth/signup";
 
   // check product routine in user add

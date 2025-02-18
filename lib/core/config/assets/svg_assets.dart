@@ -10,4 +10,11 @@ class SvgAssets {
   static const navigatorProfile = "${navigatorPath}/profile.svg";
   static const navigatorRoutine = "${navigatorPath}/routine.svg";
   static const navigatorScan = "${navigatorPath}/scan.svg";
+
+  //Logo
+  static const sourcePath = "assets/splash";
+  static const logoPath = "assets/Logo.svg";
+  // static const source_by_2 = "${sourcePath}/source2.svg";
+  // static const source_by_3 = "${sourcePath}/source3.svg";
+  // static const source_by_4 = "${sourcePath}/source4.svg";
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:project/core/constants/api_url.dart';
+import 'package:project/core/constants/share_pref.dart';
 import 'package:project/core/error/server_failure.dart';
 import 'package:project/features/routine/data/datasource/mock_nomatch_routine.dart';
 import 'package:project/features/routine/data/datasource/mock_routine_product.dart';
@@ -16,7 +17,8 @@ abstract class RoutineRemoteDatasource {
 }
 
 class apiServiceRoutine implements RoutineRemoteDatasource {
-  final userId = sl<SharedPreferences>().getString("userId") ?? "Default";
+  final userId =
+      sl<SharedPreferences>().getString(shared_pref.userId) ?? "Default";
   @override
   Future<List<NoMatchModel>> fetchNoMatchRoutine() async {
     final url = Uri.parse("${AppUrl.routine_check_no_match}/${userId}");

@@ -13,12 +13,12 @@ class FavProductModel extends FavProductEntities {
   factory FavProductModel.fromJson(Map<String, dynamic> json) {
     return FavProductModel(
         id: json["id"],
-        product: json["product"],
+        product: json["name"],
         brand: json["brand"],
-        minPrice: json["minPrice"],
-        maxPrice: json["maxPrice"],
-        img: json["img"],
-        rating: json["rating"]);
+        minPrice: json["min_price"],
+        maxPrice: json["max_price"],
+        img: json["image_url"],
+        rating: json["view"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -26,10 +26,10 @@ class FavProductModel extends FavProductEntities {
       'id': id,
       'product': product,
       'brand': brand,
-      'minPrice': minPrice,
-      'maxPrice': maxPrice,
-      'img': img,
-      'rating': rating,
+      'min_price': minPrice,
+      'max_price': maxPrice,
+      'image_url': img,
+      'view': rating,
     };
   }
 }

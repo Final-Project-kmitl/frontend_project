@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:project/core/constants/share_pref.dart';
 import 'package:project/core/network/dio_client.dart';
 import 'package:project/features/favorite/data/datasource/fav_datasource.dart';
 import 'package:project/features/favorite/data/repository/fav_repository_impl.dart';
@@ -29,6 +30,7 @@ Future<void> setupServiceLocator() async {
       () async => await SharedPreferences.getInstance());
 
   await sl.allReady();
+  sl<SharedPreferences>().setString(shared_pref.userId, "1");
 
 //Routine
   sl.registerLazySingleton<RoutineRemoteDatasource>(() => apiServiceRoutine());

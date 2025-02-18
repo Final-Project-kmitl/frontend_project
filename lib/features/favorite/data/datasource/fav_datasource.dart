@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:project/core/constants/api_url.dart';
 import 'package:project/core/constants/share_pref.dart';
 import 'package:project/core/error/server_failure.dart';
+import 'package:project/core/network/dio_client.dart';
 import 'package:project/features/favorite/data/datasource/fav_mock_data.dart';
 import 'package:project/features/favorite/data/models/fav_product_model.dart';
 import 'package:project/service_locator.dart';
@@ -16,26 +17,26 @@ abstract class FavRemoteDatasource {
 }
 
 class apiServiceFavorite implements FavRemoteDatasource {
-  final userId =
-      sl<SharedPreferences>().getString(shared_pref.userId) ?? "Default";
+  final userId = sl<SharedPreferences>().getString(shared_pref.userId)!;
+
+  final dio = sl<DioClient>();
   @override
   Future<List<FavProductModel>> fetchFavProduct() async {
-    final url = Uri.parse("${AppUrl.get_fav_product}/${userId}");
+    final url = Uri.parse(AppUrl.getFavoriteProduct(userId));
+    // final url = Uri.parse("${AppUrl.get_fav_product}/${userId}");
+    print("URL : $url");
 
     try {
       final res = await http.get(url);
 
       if (res.statusCode == 200) {
         List jsonData = json.decode(res.body);
-
         return jsonData.map((e) => FavProductModel.fromJson(e)).toList();
       } else {
-        return mockFavoriteData
-            .map((e) => FavProductModel.fromJson(e))
-            .toList();
-        // throw Exception("Fail to load Product user Fav");
+        throw Exception("Fail to load Product user Fav");
       }
     } catch (e) {
+      print(e.toString());
       return mockFavoriteData.map((e) => FavProductModel.fromJson(e)).toList();
       // throw ServerFailure(e.toString());
     }
@@ -43,15 +44,18 @@ class apiServiceFavorite implements FavRemoteDatasource {
 
   @override
   Future<void> unFavProduct(Set<int> productId) async {
-    final url = Uri.parse("${AppUrl.unfav}/${userId}");
+    final url = Uri.parse("${AppUrl.favorite_delete}");
     try {
       if (productId.length == 0) {
         print("no product select");
       } else {
-        print(productId);
-        final res = await http.delete(url, body: productId);
-
-        print(res.statusCode);
+        for (int id in productId) {
+          final res = await dio.delete(url.toString(), data: {
+            "userId": userId,
+            "productId": id,
+          });
+          print(res);
+        }
       }
     } catch (e) {
       print(e.toString());

@@ -2,10 +2,10 @@ class FavProductEntities {
   final int id;
   final String product;
   final String brand;
-  final int minPrice;
-  final int maxPrice;
+  final String minPrice;
+  final String maxPrice;
   final String img;
-  final int rating;
+  final String rating;
 
   const FavProductEntities({
     required this.id,

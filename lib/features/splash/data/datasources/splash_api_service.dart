@@ -1,5 +1,4 @@
 import 'package:dartz/dartz.dart';
-import 'package:http/http.dart';
 import 'package:project/core/constants/api_url.dart';
 import 'package:project/core/constants/share_pref.dart';
 import 'package:project/core/error/server_failure.dart';
@@ -17,13 +16,15 @@ class SplashApiServiceImpl extends SplashApiService {
 
   @override
   Future<Either<Failure, bool>> chechUserAPI() async {
+    print("User id : ${userId}");
     try {
       if (userId == null) {
         return Left(ServerFailure("User is null"));
       } else {
-        final ress = await dio.get("${AppUrl.checkUser}/$userId");
+        final res = await dio.get("${AppUrl.baseUrl}/user/$userId");
 
-        if (ress.statusCode == 200) {
+        if (res.statusCode == 200) {
+          print(res.statusCode);
           return Right(true);
         }
         return Left(ServerFailure("User not found"));

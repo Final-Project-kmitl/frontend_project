@@ -137,15 +137,20 @@ class _HomePageState extends State<HomePage> {
           Positioned(
               left: MediaQuery.sizeOf(context).width / 2 - 31,
               bottom: 19,
-              child: Container(
-                width: 62,
-                padding: const EdgeInsets.all(16),
-                decoration: const BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: AppColors.black,
-                ),
-                child: SvgPicture.asset(
-                  SvgAssets.navigatorScan,
+              child: GestureDetector(
+                onTap: () {
+                  print("camera");
+                },
+                child: Container(
+                  width: 62,
+                  padding: const EdgeInsets.all(16),
+                  decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: AppColors.black,
+                  ),
+                  child: SvgPicture.asset(
+                    SvgAssets.navigatorScan,
+                  ),
                 ),
               ))
         ],
@@ -165,11 +170,9 @@ class _HomePageState extends State<HomePage> {
                   print("State ยังไม่พร้อม ไม่ส่ง event");
                 }
               } else if (_currentPage != 1 && index == 1) {
-                print("กลับมาที่ Favorite Page → โหลดรายการใหม่");
                 sl<FavoriteBloc>().add(LoadFavoritesEvent());
               }
-              print("_currentPage : ${_currentPage}");
-              print("index : ${index}");
+
               _currentPage = index;
             },
             children: [

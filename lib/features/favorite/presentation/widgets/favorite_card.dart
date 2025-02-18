@@ -58,7 +58,20 @@ class FavoriteCard extends StatelessWidget {
                     height: 140,
                     width: double.infinity,
                     child: Image.network(
-                      'https://medias.watsons.co.th/publishing/WTCTH-255543-front-KIPZvQs5-zoom.png?version=1735151487',
+                      product.img,
+                      loadingBuilder: (context, child, loadingProgress) {
+                        if (loadingProgress == null) {
+                          return child;
+                        } else {
+                          return CircularProgressIndicator(); // ถ้ายังโหลดอยู่ ให้แสดง progress bar
+                        }
+                      },
+                      errorBuilder: (context, error, stackTrace) {
+                        return Image.asset(
+                          "assets/test_img.png",
+                          fit: BoxFit.contain,
+                        );
+                      },
                       fit: BoxFit
                           .contain, // ปรับให้ภาพเต็มพื้นที่ โดยอาจตัดบางส่วนออก
                     ),
@@ -76,27 +89,27 @@ class FavoriteCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              "namelkanslgfbnlsdfgn jlnsdflfgn k asdkfjgnlksdjnalkf ;jnklasdnlnfk",
+              product.product,
               maxLines: 2,
               style:
                   TextThemes.bodyBold.copyWith(overflow: TextOverflow.ellipsis),
             ),
             const SizedBox(height: 6),
             Text(
-              "brand",
+              product.brand,
               style: TextThemes.desc.copyWith(color: AppColors.darkGrey),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  '400 บาท',
+                  "${product.minPrice} - ${product.maxPrice} บาท",
                   style: TextThemes.bodyBold,
                 ),
                 Container(
                   decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(4),
-                      color: rating > 70
+                      color: product.rating.length > 70
                           ? AppColors.quality_good_match
                           : rating > 35
                               ? AppColors.quality_medium_match
@@ -105,7 +118,7 @@ class FavoriteCard extends StatelessWidget {
                                   : AppColors.quality_not_math),
                   padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
                   child: Text(
-                    "${rating}/100",
+                    "${product.rating.length}/100",
                     style: TextThemes.descBold.copyWith(color: AppColors.white),
                   ),
                 )

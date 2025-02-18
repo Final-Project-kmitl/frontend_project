@@ -24,17 +24,7 @@ class _SplashPageState extends State<SplashPage> {
     // sl<SplashBloc>();
 
     context.read<SplashBloc>().add(CheckUserEvent());
-    checkAsset();
     super.initState();
-  }
-
-  void checkAsset() async {
-    try {
-      ByteData data = await rootBundle.load("assets/frame.svg");
-      print("SVG loadedasdf: ${data.lengthInBytes} bytes");
-    } catch (e) {
-      print("Error loading SVGasdf: $e");
-    }
   }
 
   @override
@@ -72,7 +62,7 @@ class _SplashPageState extends State<SplashPage> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Image.asset("assets/splash/f306.png")
+                        Image.asset("assets/f306.png")
 
                         // SizedBox(
                         //   width: 40,

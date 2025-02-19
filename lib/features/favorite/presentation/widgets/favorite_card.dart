@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
-import 'package:project/features/favorite/data/models/fav_product_model.dart';
 import 'package:project/features/favorite/domain/entities/fav_product.dart';
 
 var testMoock = [
@@ -94,7 +93,7 @@ class FavoriteCard extends StatelessWidget {
               style:
                   TextThemes.bodyBold.copyWith(overflow: TextOverflow.ellipsis),
             ),
-            const SizedBox(height: 6),
+            Spacer(),
             Text(
               product.brand,
               style: TextThemes.desc.copyWith(color: AppColors.darkGrey),

@@ -7,6 +7,16 @@ import 'package:project/features/favorite/domain/repository/fav_repository.dart'
 import 'package:project/features/favorite/domain/usecase/get_favorite.dart';
 import 'package:project/features/favorite/domain/usecase/un_fav_favorite.dart';
 import 'package:project/features/favorite/presentation/bloc/favorite_bloc.dart';
+import 'package:project/features/home/data/datasource/home_datasource.dart';
+import 'package:project/features/home/data/repository/home_repo_impl.dart';
+import 'package:project/features/home/domain/repository/home_repo.dart';
+import 'package:project/features/home/domain/usecases/add_favorite.dart';
+import 'package:project/features/home/domain/usecases/get_favorite.dart';
+import 'package:project/features/home/domain/usecases/get_popular.dart';
+import 'package:project/features/home/domain/usecases/get_recent.dart';
+import 'package:project/features/home/domain/usecases/get_recomend.dart';
+import 'package:project/features/home/domain/usecases/remove_favorite.dart';
+import 'package:project/features/home/presentation/bloc/home_bloc.dart';
 import 'package:project/features/routine/data/datasource/routine_datasource.dart';
 import 'package:project/features/routine/data/repository/routine_repository_impl.dart';
 import 'package:project/features/routine/domain/repository/routine_repository.dart';
@@ -51,12 +61,38 @@ Future<void> setupServiceLocator() async {
   sl.registerLazySingleton<FavRemoteDatasource>(() => apiServiceFavorite());
   sl.registerLazySingleton<FavRepository>(
       () => FavRepositoryImpl(sl<FavRemoteDatasource>()));
-  sl.registerLazySingleton<GetFavorite>(() => GetFavorite(sl<FavRepository>()));
+  sl.registerLazySingleton<GetFavorite>(
+      () => GetFavorite(favRepository: sl<FavRepository>()));
   sl.registerLazySingleton<UnFavFavorite>(
       () => UnFavFavorite(sl<FavRepository>()));
   sl.registerLazySingleton<FavoriteBloc>(() => FavoriteBloc(
         getFavorite: sl<GetFavorite>(),
         unFavFavorite: sl<UnFavFavorite>(),
+      ));
+
+  //Home
+  sl.registerLazySingleton<HomeRemoteDatasource>(() => apiServiceHome());
+  sl.registerLazySingleton<HomeRepo>(
+      () => HomeRepoImpl(homeRemoteDatasource: sl<HomeRemoteDatasource>()));
+  sl.registerLazySingleton<GetPopular>(
+      () => GetPopular(homeRepo: sl<HomeRepo>()));
+  sl.registerLazySingleton<GetRecent>(
+      () => GetRecent(homeRepo: sl<HomeRepo>()));
+  sl.registerLazySingleton<GetRecomend>(
+      () => GetRecomend(homeRepo: sl<HomeRepo>()));
+  sl.registerLazySingleton<GetHomeFavorite>(
+      () => GetHomeFavorite(homeRepo: sl<HomeRepo>()));
+  sl.registerLazySingleton<AddFavorite>(
+      () => AddFavorite(homeRepo: sl<HomeRepo>()));
+  sl.registerLazySingleton<RemoveFavorite>(
+      () => RemoveFavorite(homeRepo: sl<HomeRepo>()));
+  sl.registerFactory<HomeBloc>(() => HomeBloc(
+        getPopular: sl<GetPopular>(),
+        getRecent: sl<GetRecent>(),
+        getRecomend: sl<GetRecomend>(),
+        getFavorite: sl<GetHomeFavorite>(),
+        addFavorite: sl<AddFavorite>(),
+        removeFavorite: sl<RemoveFavorite>(),
       ));
 
   //Splash

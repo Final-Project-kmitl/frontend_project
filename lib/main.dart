@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project/core/config/theme/app_theme.dart';
 import 'package:project/features/favorite/presentation/bloc/favorite_bloc.dart';
-import 'package:project/features/home/presentation/pages/home_page.dart';
+import 'package:project/features/home/presentation/bloc/home_bloc.dart';
 import 'package:project/features/routine/presentation/bloc/routine_bloc.dart';
 import 'package:project/features/splash/presentation/bloc/splash_bloc.dart';
 import 'package:project/features/splash/presentation/pages/splash_page.dart';
@@ -30,7 +30,10 @@ void main() async {
       ),
       BlocProvider<SplashBloc>(
         create: (context) => sl<SplashBloc>(),
-      )
+      ),
+      BlocProvider<HomeBloc>(
+        create: (context) => sl<HomeBloc>(),
+      ),
     ],
     child: MyApp(),
   ));

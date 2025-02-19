@@ -33,5 +33,9 @@ class AppUrl {
   //delete routine Id
   static final routine_delete_product = "${baseUrl}/delete-product-routine";
 
-  static final unfav = "${baseUrl}/unfav";
+  //home page
+  static final home_recommend = "${baseUrl}/product/get-recommend";
+  static final home_recent = "${baseUrl}/product/get-recent";
+  static final home_popular = "${baseUrl}/product/get-popular";
+  static final home_favorite = "${baseUrl}/user/favorite-product";
 }

@@ -3,7 +3,7 @@ import 'package:project/features/favorite/domain/repository/fav_repository.dart'
 
 class GetFavorite {
   final FavRepository favRepository;
-  GetFavorite(this.favRepository);
+  GetFavorite({required this.favRepository});
 
   Future<List<FavProductEntities>> call() {
     return favRepository.getFavProduct();

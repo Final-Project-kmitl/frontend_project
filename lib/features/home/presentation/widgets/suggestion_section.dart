@@ -1,38 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
+import 'package:project/features/home/domain/entities/product_entity.dart';
+import 'package:project/features/home/presentation/bloc/home_bloc.dart';
 
 class SuggestionSection extends StatefulWidget {
-  const SuggestionSection({super.key});
+  final String title;
+  final List<ProductEntity> product;
+  final List<FavoriteProductEntity> favProduct;
+  const SuggestionSection({
+    super.key,
+    required this.title,
+    required this.product,
+    required this.favProduct,
+  });
 
   @override
   State<SuggestionSection> createState() => _SuggestionSectionState();
 }
 
 class _SuggestionSectionState extends State<SuggestionSection> {
-  final List<String> mockProduct = <String>[
-    "AAAA   aaaaaaaaaaaaAAAGSDFGRT",
-    "BBBB",
-    "ADSFAF",
-    "arewfefAFE",
-    "qwihjqoriweqmr",
-    "afmoejeiowmr",
-    "asmfeoewmsof"
-  ];
-  List<String> mockSelectProuct = [];
-
-  void onSelected(String input) {
-    setState(() {
-      if (mockSelectProuct.contains(input)) {
-        mockSelectProuct.remove(input);
-      } else {
-        mockSelectProuct.add(input);
-      }
-    });
-  }
-
+  //สร้าง set ของ fav easy to check
   @override
   Widget build(BuildContext context) {
+    IconData getFavIcon(int productId) {
+      bool isFav = widget.favProduct.any((fav) => fav.id == productId);
+      return isFav ? Icons.favorite : Icons.favorite_border;
+    }
+
     return Column(
       children: [
         Padding(
@@ -42,7 +38,7 @@ class _SuggestionSectionState extends State<SuggestionSection> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                "แนะนำสำหรับคุณ",
+                widget.title,
                 style: TextThemes.headline2,
               ),
               GestureDetector(
@@ -73,72 +69,105 @@ class _SuggestionSectionState extends State<SuggestionSection> {
                 height: 210,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: 7,
+                  itemCount: widget.product.length + 2,
                   itemBuilder: (context, index) {
-                    if (index == 0) {
+                    if (index == 0 || widget.product.length + 1 == index) {
                       return Container(
                         width: 10,
                       );
                     }
-                    return Container(
-                      width: 140,
-                      margin: EdgeInsets.symmetric(horizontal: 8),
-                      decoration: BoxDecoration(
-                        color: Color(0xffE9F2FB),
-                        borderRadius: BorderRadius.circular(12),
-                      ),
-                      child: Padding(
-                        padding: const EdgeInsets.all(12.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment
-                              .start, // Align children to the left
-                          children: [
-                            Container(
-                              width: double.infinity,
-                              height: 100,
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: Image.asset(
-                                "assets/test_img.png",
-                                fit: BoxFit.contain,
-                              ),
-                            ),
-                            const SizedBox(height: 6),
-                            Text(
-                              mockProduct[index],
-                              style: const TextStyle(
-                                fontSize: 15,
-                                fontWeight: FontWeight.w800,
-                              ),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign:
-                                  TextAlign.left, // Align text to the left
-                            ),
-                            const Spacer(),
-                            Row(
-                              children: [
-                                const Text(
-                                  "OOTD",
-                                  style: TextStyle(fontSize: 12),
+                    return GestureDetector(
+                      onTap: () {
+                        print("!@#!@#");
+                      },
+                      child: Container(
+                        width: 140,
+                        margin: EdgeInsets.symmetric(horizontal: 8),
+                        decoration: BoxDecoration(
+                          color: Color(0xffE9F2FB),
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(12.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment
+                                .start, // Align children to the left
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height: 100,
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(12),
                                 ),
-                                const Spacer(),
-                                GestureDetector(
-                                  onTap: () {
-                                    onSelected(mockProduct[index]);
-                                  },
-                                  child: mockSelectProuct
-                                          .contains(mockProduct[index])
-                                      ? const Icon(
-                                          Icons.favorite,
-                                        )
-                                      : const Icon(Icons.favorite_border),
-                                )
-                              ],
-                            ),
-                          ],
+                                child: Image.asset(
+                                  "assets/test_img.png",
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                              const SizedBox(height: 6),
+                              Text(
+                                widget.product[index - 1].name,
+                                style: const TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.w800,
+                                ),
+                                maxLines: 2,
+                                overflow: TextOverflow.ellipsis,
+                                textAlign:
+                                    TextAlign.left, // Align text to the left
+                              ),
+                              const Spacer(),
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      widget.product[index - 1].brand,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextThemes.desc
+                                          .copyWith(color: AppColors.darkGrey),
+                                    ),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      bool isFav = widget.favProduct.any(
+                                          (fav) =>
+                                              fav.id ==
+                                              widget.product[index - 1].id);
+                                      context.read<HomeBloc>().add(
+                                            ToggleFavoriteEvent(
+                                              isFavorite: isFav,
+                                              productFav: FavoriteProductEntity(
+                                                  brand: widget
+                                                      .product[index - 1].brand,
+                                                  id: widget
+                                                      .product[index - 1].id,
+                                                  image_url: widget
+                                                      .product[index - 1]
+                                                      .imageUrl,
+                                                  max_price: widget
+                                                      .product[index - 1]
+                                                      .price
+                                                      .max,
+                                                  min_price: widget
+                                                      .product[index - 1]
+                                                      .price
+                                                      .min,
+                                                  name: widget
+                                                      .product[index - 1].name,
+                                                  view: widget
+                                                      .product[index - 1]
+                                                      .rating),
+                                            ),
+                                          );
+                                    },
+                                    child: Icon(getFavIcon(
+                                        widget.product[index - 1].id)),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     );

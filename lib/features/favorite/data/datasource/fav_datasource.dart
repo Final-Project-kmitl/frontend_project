@@ -1,6 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
 import 'package:project/core/constants/api_url.dart';
 import 'package:project/core/constants/share_pref.dart';
 import 'package:project/core/error/server_failure.dart';
@@ -23,14 +22,13 @@ class apiServiceFavorite implements FavRemoteDatasource {
   @override
   Future<List<FavProductModel>> fetchFavProduct() async {
     final url = Uri.parse(AppUrl.getFavoriteProduct(userId));
-    // final url = Uri.parse("${AppUrl.get_fav_product}/${userId}");
     print("URL : $url");
 
     try {
-      final res = await http.get(url);
+      final res = await dio.get(url.toString());
 
       if (res.statusCode == 200) {
-        List jsonData = json.decode(res.body);
+        List jsonData = res.data;
         return jsonData.map((e) => FavProductModel.fromJson(e)).toList();
       } else {
         throw Exception("Fail to load Product user Fav");
@@ -54,7 +52,6 @@ class apiServiceFavorite implements FavRemoteDatasource {
             "userId": userId,
             "productId": id,
           });
-          print(res);
         }
       }
     } catch (e) {

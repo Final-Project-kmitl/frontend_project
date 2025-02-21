@@ -1,5 +1,6 @@
 import 'dart:io';
 
+
 class AppUrl {
   static final String baseUrl = _getBaseUrl();
 
@@ -20,6 +21,9 @@ class AppUrl {
   static String getFavoriteProduct(String userId) {
     return "$baseUrl/user/$userId/favorite-products";
   }
+
+  //product
+  static final product_detail = "${baseUrl}/product";
 
   //delete Favorite Product
   static final favorite_delete = "${baseUrl}/user/favorite-product";

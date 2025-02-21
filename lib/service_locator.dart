@@ -17,6 +17,11 @@ import 'package:project/features/home/domain/usecases/get_recent.dart';
 import 'package:project/features/home/domain/usecases/get_recomend.dart';
 import 'package:project/features/home/domain/usecases/remove_favorite.dart';
 import 'package:project/features/home/presentation/bloc/home_bloc.dart';
+import 'package:project/features/product/data/datasource/product_datasource.dart';
+import 'package:project/features/product/data/repository/product_detail_repository_impl.dart';
+import 'package:project/features/product/domain/repository/product_detail_repository.dart';
+import 'package:project/features/product/domain/usecases/get_product_detail.dart';
+import 'package:project/features/product/presentation/bloc/product_bloc.dart';
 import 'package:project/features/routine/data/datasource/routine_datasource.dart';
 import 'package:project/features/routine/data/repository/routine_repository_impl.dart';
 import 'package:project/features/routine/domain/repository/routine_repository.dart';
@@ -94,6 +99,15 @@ Future<void> setupServiceLocator() async {
         addFavorite: sl<AddFavorite>(),
         removeFavorite: sl<RemoveFavorite>(),
       ));
+
+  //Product
+  sl.registerLazySingleton<ProductDatasource>(() => apiServiceProduct());
+  sl.registerLazySingleton<ProductDetailRepository>(() =>
+      ProductDetailRepositoryImpl(productDatasource: sl<ProductDatasource>()));
+  sl.registerLazySingleton<GetProductDetail>(() =>
+      GetProductDetail(productDetailRepository: sl<ProductDetailRepository>()));
+  sl.registerFactory<ProductBloc>(
+      () => ProductBloc(getProductDetail: sl<GetProductDetail>()));
 
   //Splash
   sl.registerLazySingleton<SplashApiService>(() => SplashApiServiceImpl());

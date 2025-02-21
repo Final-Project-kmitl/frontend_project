@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:project/core/config/assets/svg_assets.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
 import 'package:project/features/favorite/presentation/bloc/favorite_bloc.dart';
@@ -39,9 +41,30 @@ class _FavoritePageState extends State<FavoritePage> {
           return const Center(
             child: CircularProgressIndicator(
               color: AppColors.black,
+              strokeWidth: 6,
             ),
           );
         } else if (state is FavoriteLoaded) {
+          if (state.favorites.length == 0) {
+            return Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SvgPicture.asset(SvgAssets.favorite_empty),
+                  SizedBox(
+                    height: 16,
+                  ),
+                  Text(
+                    "ยังไม่มีผลิตภัณฑ์ที่คุณกดถูกใจ",
+                    style: TextThemes.bodyBold,
+                  ),
+                  SizedBox(
+                    height: 62 + 82,
+                  )
+                ],
+              ),
+            );
+          }
           return SafeArea(
             bottom: false,
             child: Padding(
@@ -79,8 +102,8 @@ class _FavoritePageState extends State<FavoritePage> {
             ),
           );
         }
-        return const Center(
-          child: Text("data"),
+        return Center(
+          child: Text("ไม่สามารถโหลดข้อมูล กลับมาใหม่ในภายหลัง"),
         );
       }),
     );

@@ -66,9 +66,12 @@ class FavoriteCard extends StatelessWidget {
                         }
                       },
                       errorBuilder: (context, error, stackTrace) {
-                        return Image.asset(
-                          "assets/test_img.png",
-                          fit: BoxFit.contain,
+                        return Container(
+                          color: AppColors.white,
+                          child: Image.asset(
+                            "assets/test_img.png",
+                            fit: BoxFit.contain,
+                          ),
                         );
                       },
                       fit: BoxFit
@@ -77,10 +80,13 @@ class FavoriteCard extends StatelessWidget {
                   ),
                   Positioned(
                     right: 3,
+                    top: 3,
                     child: IconButton(
                       onPressed: onToggleFavorite,
                       icon: Icon(
-                          isUnFav ? Icons.favorite_border : Icons.favorite),
+                        isUnFav ? Icons.favorite_border : Icons.favorite,
+                        size: 30,
+                      ),
                     ),
                   )
                 ],

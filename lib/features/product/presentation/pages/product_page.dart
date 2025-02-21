@@ -1,5 +1,408 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:project/core/config/assets/svg_assets.dart';
+import 'package:project/core/config/theme/app_color.dart';
+import 'package:project/core/config/theme/app_theme.dart';
+import 'package:project/features/product/presentation/bloc/product_bloc.dart';
+import 'package:project/main.dart';
+
+class ProductPage extends StatefulWidget {
+  final int productId;
+  const ProductPage({super.key, required this.productId});
+
+  @override
+  State<ProductPage> createState() => _ProductPageState();
+}
+
+class _ProductPageState extends State<ProductPage> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    context.read<ProductBloc>()
+      ..add(ProductDetailRequestedEvent(productId: widget.productId));
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: AppColors.white,
+      body: SafeArea(
+          top: true,
+          child: CustomScrollView(
+            slivers: [
+              SliverPersistentHeader(
+                delegate: _SliverAppBarDelegate(
+                  minHeight: 350,
+                  maxHeight: 450,
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(
+                          top: 20,
+                          bottom: 20,
+                        ),
+                        height: 372,
+                        child: Image.network(
+                          "",
+                          errorBuilder: (context, error, stackTrace) {
+                            return Image.asset(
+                              "assets/test_img.png",
+                              fit: BoxFit.contain,
+                            );
+                          },
+                        ),
+                      ),
+                      Positioned(
+                          top: 0,
+                          left: 10,
+                          child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.chevron_left_outlined,
+                                size: 34,
+                              ))),
+                      Positioned(
+                        top: 0,
+                        right: 10,
+                        child: IconButton(
+                          onPressed: () {},
+                          icon: Icon(
+                            Icons.favorite,
+                            size: 34,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              SliverToBoxAdapter(
+                child: Container(
+                  decoration: BoxDecoration(
+                    boxShadow: [
+                      BoxShadow(
+                        color: AppColors.black.withOpacity(0.15),
+                        blurRadius: 20,
+                        offset: Offset(0, -4),
+                      )
+                    ],
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(28),
+                      topRight: Radius.circular(28),
+                    ),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        padding: EdgeInsets.only(left: 20, right: 20, top: 24),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "ชื่อ product",
+                              style: TextThemes.headline2,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                            SizedBox(
+                              height: 12,
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "OOTD",
+                                      style: TextThemes.desc
+                                          .copyWith(color: AppColors.darkGrey),
+                                    ),
+                                    SizedBox(
+                                      height: 8,
+                                    ),
+                                    Text(
+                                      "100 - 400 บาท",
+                                      style: TextThemes.bodyBold,
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      "*ราคาขึ้นอยู่กับขนาดของผลิตภัณฑ์",
+                                      style: TextThemes.desc
+                                          .copyWith(color: AppColors.darkGrey),
+                                    )
+                                  ],
+                                ),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: 6,
+                                        vertical: 4,
+                                      ),
+                                      decoration: BoxDecoration(
+                                          color: AppColors.quality_good_match,
+                                          borderRadius:
+                                              BorderRadius.circular(4)),
+                                      child: Text(
+                                        "61/100",
+                                        style: TextThemes.descBold
+                                            .copyWith(color: AppColors.white),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: 4,
+                                    ),
+                                    Text(
+                                      "เหมาะกับคุณมาก",
+                                      style: TextThemes.desc.copyWith(
+                                        color: AppColors.darkGrey,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 24,
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 116, // กำหนดความสูงให้แน่นอน
+                        child: ListView.separated(
+                          separatorBuilder: (context, index) {
+                            return SizedBox(
+                              width: 12,
+                            );
+                          },
+                          scrollDirection: Axis.horizontal,
+                          itemCount: 10 + 2,
+                          itemBuilder: (context, index) {
+                            if (index == 0 || index == 10 + 1) {
+                              return SizedBox(
+                                width: 20 - 12,
+                              );
+                            }
+                            return Container(
+                              height: 116,
+                              padding: EdgeInsets.all(12),
+                              decoration: BoxDecoration(
+                                color: Colors.grey[200],
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              child: IntrinsicWidth(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      "เหมาะกับผิวแห้งและผิวผสม",
+                                      style: TextThemes.bodyBold,
+                                    ),
+                                    SizedBox(height: 12),
+                                    ConstrainedBox(
+                                      constraints: BoxConstraints(
+                                        maxWidth: 220,
+                                      ),
+                                      child: Text(
+                                        "ผลิตภัณฑ์นี้มีส่วนผสมของ (ชื่อสาร) (และอื่น ๆ) ซึ่งอาจส่งผลต่อ (ปัญหาผิว)",
+                                        maxLines: 2,
+                                        overflow: TextOverflow
+                                            .ellipsis, // ถ้าข้อความเกิน 2 บรรทัดให้มี ...
+                                        style: TextThemes.desc.copyWith(
+                                            color: AppColors.darkGrey),
+                                      ),
+                                    ),
+                                    Spacer(),
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        SvgPicture.asset(
+                                          "assets/icon_pin.svg",
+                                          color: AppColors.black,
+                                          width: 16,
+                                          height: 16,
+                                        ),
+                                        SizedBox(
+                                          width: 6,
+                                        ),
+                                        Text(
+                                          "data",
+                                          style: TextThemes.desc,
+                                        )
+                                      ],
+                                    )
+                                  ],
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "data",
+                              style: TextThemes.headline2,
+                            ),
+                            SizedBox(
+                              height: 16,
+                            ),
+                            Row(
+                              children: [
+                                Column(
+                                  children: [
+                                    Container(
+                                      padding: EdgeInsets.all(6),
+                                      decoration: BoxDecoration(
+                                          color: AppColors.paleBlue,
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      child: SvgPicture.asset(
+                                          SvgAssets.product_good),
+                                    ),
+                                    Container(
+                                      width: 3,
+                                      color: AppColors.darkGrey,
+                                    )
+                                  ],
+                                ),
+                                SizedBox(
+                                  width: 16,
+                                ),
+                                Column(
+                                  children: [
+                                    Text(
+                                      "คุณสมบัติ",
+                                      style: TextThemes.bodyBold,
+                                    )
+                                  ],
+                                )
+                              ],
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          )),
+      bottomNavigationBar: Container(
+        decoration: BoxDecoration(boxShadow: [
+          BoxShadow(
+            color: AppColors.black.withOpacity(0.15),
+            blurRadius: 20,
+            offset: Offset(0, -4),
+          )
+        ]),
+        child: BottomAppBar(
+          color: AppColors.white,
+          padding: EdgeInsets.symmetric(
+            horizontal: 20,
+            vertical: 16,
+          ),
+          child: Row(
+            children: [
+              GestureDetector(
+                onTap: () {
+                  print("FAVORITE");
+                },
+                child: Container(
+                  width: MediaQuery.of(context).size.width / 3,
+                  padding: EdgeInsets.symmetric(vertical: 10),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: AppColors.black,
+                    ),
+                    borderRadius: BorderRadius.circular(16),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      AnimatedSwitcher(
+                        duration: Duration(seconds: 1),
+                        transitionBuilder: (child, animation) {
+                          return ScaleTransition(
+                            scale: animation,
+                            child: child,
+                          );
+                        },
+                        child: Icon(Icons.favorite),
+                      ),
+                      SizedBox(
+                        width: 8,
+                      ),
+                      Text(
+                        "ถูกใจ",
+                        style: TextThemes.bodyBold,
+                      )
+                    ],
+                  ),
+                ),
+              ),
+              SizedBox(
+                width: 16,
+              ),
+              Expanded(
+                child: GestureDetector(
+                  onTap: () {},
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: AppColors.black,
+                      border: Border.all(
+                        color: AppColors.black,
+                      ),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    padding: EdgeInsets.symmetric(vertical: 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          SvgAssets.product_routine,
+                          color: AppColors.white,
+                        ),
+                        SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          "เพิ่มลงรูทีน",
+                          style: TextThemes.bodyBold.copyWith(
+                            color: AppColors.white,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
 
 // class ProductPage extends StatelessWidget {
 //   const ProductPage({super.key});
@@ -353,33 +756,33 @@
 //   }
 // }
 
-// class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
-//   _SliverAppBarDelegate({
-//     required this.minHeight,
-//     required this.maxHeight,
-//     required this.child,
-//   });
+class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
+  _SliverAppBarDelegate({
+    required this.minHeight,
+    required this.maxHeight,
+    required this.child,
+  });
 
-//   final double minHeight;
-//   final double maxHeight;
-//   final Widget child;
+  final double minHeight;
+  final double maxHeight;
+  final Widget child;
 
-//   @override
-//   double get minExtent => minHeight;
+  @override
+  double get minExtent => minHeight;
 
-//   @override
-//   double get maxExtent => maxHeight;
+  @override
+  double get maxExtent => maxHeight;
 
-//   @override
-//   Widget build(
-//       BuildContext context, double shrinkOffset, bool overlapsContent) {
-//     return SizedBox.expand(child: child);
-//   }
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return SizedBox.expand(child: child);
+  }
 
-//   @override
-//   bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-//     return maxHeight != oldDelegate.maxHeight ||
-//         minHeight != oldDelegate.minHeight ||
-//         child != oldDelegate.child;
-//   }
-// }
+  @override
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
+    return maxHeight != oldDelegate.maxHeight ||
+        minHeight != oldDelegate.minHeight ||
+        child != oldDelegate.child;
+  }
+}

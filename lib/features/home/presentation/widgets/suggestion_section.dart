@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project/core/common/helper/navigation/app_navigation.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
 import 'package:project/features/home/domain/entities/product_entity.dart';
 import 'package:project/features/home/presentation/bloc/home_bloc.dart';
+import 'package:project/features/home/presentation/widgets/show_suggestion.dart';
+import 'package:project/features/product/presentation/pages/product_page.dart';
 
 class SuggestionSection extends StatefulWidget {
   final String title;
@@ -42,7 +45,15 @@ class _SuggestionSectionState extends State<SuggestionSection> {
                 style: TextThemes.headline2,
               ),
               GestureDetector(
-                onTap: () {},
+                onTap: () {
+                  AppNavigator.push(
+                      context,
+                      ShowSuggestion(
+                        title: widget.title,
+                        favProduct: widget.favProduct,
+                        product: widget.product,
+                      ));
+                },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
@@ -78,7 +89,8 @@ class _SuggestionSectionState extends State<SuggestionSection> {
                     }
                     return GestureDetector(
                       onTap: () {
-                        print("!@#!@#");
+                        AppNavigator.push(context,
+                            ProductPage(productId: widget.product[index].id));
                       },
                       child: Container(
                         width: 140,

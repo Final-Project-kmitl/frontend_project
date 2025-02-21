@@ -11,9 +11,19 @@ class SvgAssets {
   static const navigatorRoutine = "${navigatorPath}/routine.svg";
   static const navigatorScan = "${navigatorPath}/scan.svg";
 
+  //Favorite
+  static const favorite_empty = "assets/empty.svg";
+
   //Logo
   static const sourcePath = "assets/splash";
   static const logoPath = "assets/Logo.svg";
+
+  //Home
+  static const product_routine = "assets/bottomNavigation/routine.svg";
+
+  //Product
+  static const product_good = "assets/product/good.svg";
+  static const product_hand = "assets/product/hand.svg";
   // static const source_by_2 = "${sourcePath}/source2.svg";
   // static const source_by_3 = "${sourcePath}/source3.svg";
   // static const source_by_4 = "${sourcePath}/source4.svg";

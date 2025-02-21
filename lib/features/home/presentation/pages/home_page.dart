@@ -139,7 +139,10 @@ class _HomePageState extends State<HomePage> {
       body: BlocBuilder<HomeBloc, HomeState>(builder: (context, state) {
         if (state is HomeLoading) {
           return Center(
-            child: CircularProgressIndicator(),
+            child: CircularProgressIndicator(
+              color: AppColors.black,
+              strokeWidth: 6,
+            ),
           );
         } else if (state is HomeLoaded) {
           return Stack(

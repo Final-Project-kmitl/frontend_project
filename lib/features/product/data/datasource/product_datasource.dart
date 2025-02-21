@@ -23,7 +23,7 @@ class apiServiceProduct implements ProductDatasource {
       if (res.statusCode == 200) {
         final jsonData = res.data;
 
-        return jsonData;
+        return ProductModel.fromJson(jsonData);
       } else {
         throw Exception("Can't get product detail");
       }

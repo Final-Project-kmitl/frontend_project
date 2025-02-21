@@ -89,8 +89,10 @@ class _SuggestionSectionState extends State<SuggestionSection> {
                     }
                     return GestureDetector(
                       onTap: () {
-                        AppNavigator.push(context,
-                            ProductPage(productId: widget.product[index].id));
+                        AppNavigator.push(
+                            context,
+                            ProductPage(
+                                productId: widget.product[index - 1].id));
                       },
                       child: Container(
                         width: 140,

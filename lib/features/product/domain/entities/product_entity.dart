@@ -1,22 +1,20 @@
-import 'package:equatable/equatable.dart';
-
-class ProductEntity extends Equatable {
+class ProductEntity {
   final int id;
   final String name;
   final String brand;
-  final int rating;
+  final double rating;
   final PriceEntity price;
   final String imageUrl;
   final List<SkinTypeEntity> skinTypes;
   final List<ProductTypeEntity> productTypes;
   final List<String> benefits;
-  final List<ConcernEntity> concerns;
+  final List<String> concerns;
   final List<IngredientEntity> ingredients;
-  final int view;
+  final String view;
   final List<String> productBenefits;
   final UserSpecificInfoEntity userSpecificInfo;
 
-  const ProductEntity({
+  ProductEntity({
     required this.id,
     required this.name,
     required this.brand,
@@ -32,143 +30,146 @@ class ProductEntity extends Equatable {
     required this.productBenefits,
     required this.userSpecificInfo,
   });
-
-  @override
-  List<Object?> get props => [id, name, brand, rating, price, imageUrl, view];
 }
 
-class PriceEntity extends Equatable {
+class PriceEntity {
   final String min;
   final String max;
 
-  const PriceEntity({required this.min, required this.max});
-
-  @override
-  List<Object?> get props => [min, max];
+  PriceEntity({
+    required this.min,
+    required this.max,
+  });
 }
 
-class SkinTypeEntity extends Equatable {
+class SkinTypeEntity {
   final int id;
   final String name;
 
-  const SkinTypeEntity({required this.id, required this.name});
-
-  @override
-  List<Object?> get props => [id, name];
+  SkinTypeEntity({
+    required this.id,
+    required this.name,
+  });
 }
 
-class ProductTypeEntity extends Equatable {
+class ProductTypeEntity {
   final int id;
   final String name;
 
-  const ProductTypeEntity({required this.id, required this.name});
-
-  @override
-  List<Object?> get props => [id, name];
+  ProductTypeEntity({
+    required this.id,
+    required this.name,
+  });
 }
 
-class ConcernEntity extends Equatable {
-  final int id;
-  final String name;
-
-  const ConcernEntity({required this.id, required this.name});
-
-  @override
-  List<Object?> get props => [id, name];
-}
-
-class IngredientEntity extends Equatable {
+class IngredientEntity {
   final int id;
   final String name;
   final int rating;
   final List<CategoryEntity> categories;
-  final List<ConcernEntity> concerns;
   final List<BenefitEntity> benefits;
+  final List<ConcernEntity> concerns;
 
-  const IngredientEntity({
+  IngredientEntity({
     required this.id,
     required this.name,
     required this.rating,
     required this.categories,
-    required this.concerns,
     required this.benefits,
+    required this.concerns,
   });
-
-  @override
-  List<Object?> get props => [id, name, rating];
 }
 
-class CategoryEntity extends Equatable {
+class CategoryEntity {
   final int id;
   final String name;
 
-  const CategoryEntity({required this.id, required this.name});
-
-  @override
-  List<Object?> get props => [id, name];
+  CategoryEntity({
+    required this.id,
+    required this.name,
+  });
 }
 
-class BenefitEntity extends Equatable {
+class BenefitEntity {
   final int id;
   final String name;
 
-  const BenefitEntity({required this.id, required this.name});
-
-  @override
-  List<Object?> get props => [id, name];
+  BenefitEntity({
+    required this.id,
+    required this.name,
+  });
 }
 
-class UserSpecificInfoEntity extends Equatable {
-  final List<ConcernEntity> allergicIngredients;
+class ConcernEntity {
+  final int id;
+  final String name;
+
+  ConcernEntity({
+    required this.id,
+    required this.name,
+  });
+}
+
+class UserSpecificInfoEntity {
+  final List<AllergicIngredientEntity> allergicIngredients;
   final SuitabilityEntity suitability;
   final List<SkinProblemSolutionEntity> skinProblemSolutions;
   final List<IngredientConcernEntity> ingredientConcerns;
 
-  const UserSpecificInfoEntity({
+  UserSpecificInfoEntity({
     required this.allergicIngredients,
     required this.suitability,
     required this.skinProblemSolutions,
     required this.ingredientConcerns,
   });
-
-  @override
-  List<Object?> get props => [
-        allergicIngredients,
-        suitability,
-        skinProblemSolutions,
-        ingredientConcerns
-      ];
 }
 
-class SuitabilityEntity extends Equatable {
+class AllergicIngredientEntity {
+  final int id;
+  final String name;
+
+  AllergicIngredientEntity({
+    required this.id,
+    required this.name,
+  });
+}
+
+class SuitabilityEntity {
   final bool isSuitable;
   final SkinTypeEntity userSkinType;
 
-  const SuitabilityEntity(
-      {required this.isSuitable, required this.userSkinType});
-
-  @override
-  List<Object?> get props => [isSuitable, userSkinType];
+  SuitabilityEntity({
+    required this.isSuitable,
+    required this.userSkinType,
+  });
 }
 
-class SkinProblemSolutionEntity extends Equatable {
-  final ConcernEntity problem;
-  final List<ConcernEntity> solvingIngredients;
+class SkinProblemSolutionEntity {
+  final ProblemEntity problem;
+  final List<IngredientEntity> solvingIngredients;
 
-  const SkinProblemSolutionEntity(
-      {required this.problem, required this.solvingIngredients});
-
-  @override
-  List<Object?> get props => [problem, solvingIngredients];
+  SkinProblemSolutionEntity({
+    required this.problem,
+    required this.solvingIngredients,
+  });
 }
 
-class IngredientConcernEntity extends Equatable {
-  final ConcernEntity ingredient;
+class ProblemEntity {
+  final int id;
+  final String name;
+
+  ProblemEntity({
+    required this.id,
+    required this.name,
+  });
+}
+
+class IngredientConcernEntity {
+  final IngredientEntity ingredient;
   final List<ConcernEntity> concerns;
 
-  const IngredientConcernEntity(
-      {required this.ingredient, required this.concerns});
-
-  @override
-  List<Object?> get props => [ingredient, concerns];
+  IngredientConcernEntity({
+    required this.ingredient,
+    required this.concerns,
+  });
 }

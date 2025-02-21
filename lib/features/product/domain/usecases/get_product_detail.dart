@@ -6,6 +6,7 @@ class GetProductDetail {
   GetProductDetail({required this.productDetailRepository});
 
   Future<ProductEntity> call(int productId) {
+    print("USE CASE : ${productDetailRepository.productDetail(productId)}");
     return productDetailRepository.productDetail(productId);
   }
 }

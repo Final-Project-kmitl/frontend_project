@@ -8,6 +8,7 @@ import 'package:project/features/favorite/presentation/pages/favorite_page.dart'
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:project/features/favorite/presentation/bloc/favorite_bloc.dart';
+import 'package:project/features/profile/presentation/widgets/skin_type_tag.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,7 +38,7 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Skin',
       theme: AppTheme.appTheme,
-      home: FavoritePage(),
+      home: ProfilePage(),
     );
   }
 }

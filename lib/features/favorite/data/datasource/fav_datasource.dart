@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:project/core/constants/api_url.dart';
 import 'package:project/core/constants/share_pref.dart';
@@ -8,7 +7,6 @@ import 'package:project/features/favorite/data/datasource/fav_mock_data.dart';
 import 'package:project/features/favorite/data/models/fav_product_model.dart';
 import 'package:project/service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:http/http.dart' as http;
 
 abstract class FavRemoteDatasource {
   Future<List<FavProductModel>> fetchFavProduct();

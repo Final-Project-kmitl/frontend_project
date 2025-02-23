@@ -4,6 +4,7 @@ class AppColors {
   static const cream = Color.fromARGB(255, 245, 241, 238);
   static const white = Colors.white;
   static const red = Colors.red;
+  static const orage = Colors.orange;
   static const black = Colors.black;
   static const grey = Color.fromARGB(255, 208, 208, 208);
   static const darkGrey = Color.fromARGB(255, 126, 126, 126);
@@ -12,6 +13,12 @@ class AppColors {
   static const paleBlue = Color.fromARGB(255, 233, 242, 251);
   static const yellow = Color.fromARGB(255, 253, 243, 233);
   static const purple = Color.fromARGB(255, 239, 232, 250);
+  static const miscellaneous = Color(0xff007AFF);
+  static const green = Color(0xff34C759);
+  static const light_green = Color(0xffE4FDDA);
+  static const light_red = Color(0xffFFD4DC);
+
+  static const bgOrange = Color(0xffFBE5D7);
 
   //Element
   static const bgButtonDisable = Color.fromARGB(255, 208, 208, 208);

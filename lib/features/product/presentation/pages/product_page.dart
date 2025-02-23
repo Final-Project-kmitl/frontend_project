@@ -6,6 +6,10 @@ import 'package:project/core/config/assets/svg_assets.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
 import 'package:project/features/product/presentation/bloc/product_bloc.dart';
+import 'package:project/features/product/presentation/widgets/card_benefit_scroll.dart';
+import 'package:project/features/product/presentation/widgets/ingredient_detail.dart';
+import 'package:project/features/product/presentation/widgets/ingredient_rating.dart';
+import 'package:project/features/product/presentation/widgets/show_rating.dart';
 import 'package:project/main.dart';
 
 class ProductPage extends StatefulWidget {
@@ -52,7 +56,7 @@ class _ProductPageState extends State<ProductPage> {
                               ),
                               height: 372,
                               child: Image.network(
-                                "",
+                                state.product.imageUrl,
                                 loadingBuilder:
                                     (context, child, loadingProgress) {
                                   if (loadingProgress == null) {
@@ -166,28 +170,14 @@ class _ProductPageState extends State<ProductPage> {
                                         crossAxisAlignment:
                                             CrossAxisAlignment.end,
                                         children: [
-                                          Container(
-                                            padding: EdgeInsets.symmetric(
-                                              horizontal: 6,
-                                              vertical: 4,
-                                            ),
-                                            decoration: BoxDecoration(
-                                                color: AppColors
-                                                    .quality_good_match,
-                                                borderRadius:
-                                                    BorderRadius.circular(4)),
-                                            child: Text(
-                                              "61/100",
-                                              style: TextThemes.descBold
-                                                  .copyWith(
-                                                      color: AppColors.white),
-                                            ),
-                                          ),
+                                          ShowRating(
+                                              rating: state.product.rating
+                                                  .toString()),
                                           SizedBox(
                                             height: 4,
                                           ),
                                           Text(
-                                            "เหมาะกับคุณมาก",
+                                            "${state.product.rating > 70 ? "เหมาะกับคุณมาก" : state.product.rating > 35 ? "เหมาะกับคุณปานกลาง" : state.product.rating > 0 ? "ไม่ค่อยเหมาะกับคุณ" : "ไม่เหมาะกับคุณ"}",
                                             style: TextThemes.desc.copyWith(
                                               color: AppColors.darkGrey,
                                             ),
@@ -202,130 +192,31 @@ class _ProductPageState extends State<ProductPage> {
                                 ],
                               ),
                             ),
-                            SizedBox(
-                              height: 116, // กำหนดความสูงให้แน่นอน
-                              child: ListView.separated(
-                                separatorBuilder: (context, index) {
-                                  return SizedBox(
-                                    width: 12,
-                                  );
-                                },
-                                scrollDirection: Axis.horizontal,
-                                itemCount: 10 + 2,
-                                itemBuilder: (context, index) {
-                                  if (index == 0 || index == 10 + 1) {
-                                    return SizedBox(
-                                      width: 20 - 12,
-                                    );
-                                  }
-                                  return Container(
-                                    height: 116,
-                                    padding: EdgeInsets.all(12),
-                                    decoration: BoxDecoration(
-                                      color: Colors.grey[200],
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    child: IntrinsicWidth(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          Text(
-                                            "เหมาะกับผิวแห้งและผิวผสม",
-                                            style: TextThemes.bodyBold,
-                                          ),
-                                          SizedBox(height: 12),
-                                          ConstrainedBox(
-                                            constraints: BoxConstraints(
-                                              maxWidth: 220,
-                                            ),
-                                            child: Text(
-                                              "ผลิตภัณฑ์นี้มีส่วนผสมของ (ชื่อสาร) (และอื่น ๆ) ซึ่งอาจส่งผลต่อ (ปัญหาผิว)",
-                                              maxLines: 2,
-                                              overflow: TextOverflow
-                                                  .ellipsis, // ถ้าข้อความเกิน 2 บรรทัดให้มี ...
-                                              style: TextThemes.desc.copyWith(
-                                                  color: AppColors.darkGrey),
-                                            ),
-                                          ),
-                                          Spacer(),
-                                          Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              SvgPicture.asset(
-                                                "assets/icon_pin.svg",
-                                                color: AppColors.black,
-                                                width: 16,
-                                                height: 16,
-                                              ),
-                                              SizedBox(
-                                                width: 6,
-                                              ),
-                                              Text(
-                                                "data",
-                                                style: TextThemes.desc,
-                                              )
-                                            ],
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                  );
-                                },
-                              ),
+                            CardBenefitScroll(
+                              userSpecificInfo: state.product.userSpecificInfo,
                             ),
-                            SizedBox(
+                            const SizedBox(
+                              height: 24,
+                            ),
+                            IngredientDetail(
+                              ingredients: state.product.ingredients,
+                            ),
+                            const SizedBox(
                               height: 24,
                             ),
                             Container(
-                              padding: EdgeInsets.symmetric(horizontal: 20),
                               child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Text(
-                                    "data",
-                                    style: TextThemes.headline2,
-                                  ),
-                                  SizedBox(
-                                    height: 16,
-                                  ),
-                                  Row(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Container(
-                                            padding: EdgeInsets.all(6),
-                                            decoration: BoxDecoration(
-                                                color: AppColors.paleBlue,
-                                                borderRadius:
-                                                    BorderRadius.circular(8)),
-                                            child: SvgPicture.asset(
-                                                SvgAssets.product_good),
-                                          ),
-                                          Container(
-                                            width: 3,
-                                            color: AppColors.darkGrey,
-                                          )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        width: 16,
-                                      ),
-                                      Column(
-                                        children: [
-                                          Text(
-                                            "คุณสมบัติ",
-                                            style: TextThemes.bodyBold,
-                                          )
-                                        ],
-                                      )
-                                    ],
-                                  )
+                                  Text("ผลิตภัณฑ์ที่คล้ายกัน"),
                                 ],
                               ),
-                            )
+                            ),
+                            const SizedBox(
+                              height: 24,
+                            ),
+                            IngredientRating(
+                              ingredients: state.product.ingredients,
+                            ),
                           ],
                         ),
                       ),

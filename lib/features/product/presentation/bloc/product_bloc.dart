@@ -25,7 +25,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
 
       emit(ProductDetailLoaded(product: productDetail));
 
-      print("✅ โหลดสำเร็จ: ${productDetail}");
+      print("✅${event.productId} โหลดสำเร็จ: ${productDetail}");
     } catch (e) {
       print("❌ ${event.productId} ล้มเหลว: $e");
       emit(ProductDetailError(message: "Fail to load : ${e.toString()}"));

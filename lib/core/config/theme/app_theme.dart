@@ -49,6 +49,9 @@ class ButtonThemes {
   static final normalButton = ElevatedButton.styleFrom(
       backgroundColor: AppColors.black,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)));
+  static final denialButton = FilledButton.styleFrom(
+      backgroundColor: AppColors.bg_score_card_red,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)));
   static final backwardButton = ElevatedButton.styleFrom(
       backgroundColor: AppColors.transparent,
       shadowColor: Colors.transparent,

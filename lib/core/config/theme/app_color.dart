@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   static const cream = Color.fromARGB(255, 245, 241, 238);
+  static const offWhite = Color.fromARGB(255, 247, 247, 247);
   static const white = Colors.white;
   static const red = Colors.red;
   static const orage = Colors.orange;

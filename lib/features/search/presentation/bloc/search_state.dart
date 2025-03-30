@@ -7,17 +7,45 @@ sealed class SearchState extends Equatable {
   List<Object> get props => [];
 }
 
-final class SearchInitial extends SearchState {}
+class SearchInitial extends SearchState {}
 
-final class SearchLoading extends SearchState {}
+class SearchLoading extends SearchState {}
 
-final class SearchTexting extends SearchState {}
+class SearchOnEmpty extends SearchState {}
 
-final class SearchLoaded extends SearchState {
-  final List<String> localSearch;
-  final List<String> popularSearch;
+class SearchLoaded extends SearchState {
+  final List<AutoCompleteEntity> products;
 
-  SearchLoaded({required this.localSearch, required this.popularSearch});
+  SearchLoaded(this.products);
+
+  SearchLoaded copyWith({
+    List<AutoCompleteEntity>? products,
+  }) {
+    return SearchLoaded(products ?? this.products);
+  }
 }
 
-final class SearchError extends SearchState {}
+
+
+class SubmitLoaded extends SearchState {
+  final SubmitReturnEntity submitReturn;
+  SubmitLoaded({required this.submitReturn});
+
+  SubmitLoaded copyWith({
+    final SubmitReturnEntity? submitReturnEntity,
+  }) {
+    return SubmitLoaded(submitReturn: submitReturnEntity ?? this.submitReturn);
+  }
+}
+
+class SearchSelected extends SearchState {
+  final ProductEntity product;
+
+  SearchSelected(this.product);
+}
+
+class SearchError extends SearchState {
+  final String message;
+
+  SearchError(this.message);
+}

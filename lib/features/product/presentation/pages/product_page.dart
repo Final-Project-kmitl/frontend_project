@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:project/core/common/helper/widgets/center_loading.dart';
+import 'package:project/core/common/helper/navigation/app_navigation.dart';
+import 'package:project/core/common/widgets/center_loading.dart';
 import 'package:project/core/config/assets/svg_assets.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
+import 'package:project/features/home/presentation/bloc/home_bloc.dart' as home;
+import 'package:project/features/home/presentation/pages/home_page.dart';
 import 'package:project/features/product/presentation/bloc/product_bloc.dart';
 import 'package:project/features/product/presentation/widgets/card_benefit_scroll.dart';
 import 'package:project/features/product/presentation/widgets/ingredient_detail.dart';
 import 'package:project/features/product/presentation/widgets/ingredient_rating.dart';
 import 'package:project/features/product/presentation/widgets/show_rating.dart';
-import 'package:project/main.dart';
 
 class ProductPage extends StatefulWidget {
   final int productId;
@@ -24,18 +26,22 @@ class _ProductPageState extends State<ProductPage> {
   @override
   void initState() {
     // TODO: implement initState
-    context.read<ProductBloc>()
-      ..add(ProductDetailRequestedEvent(productId: widget.productId));
     super.initState();
+    context
+        .read<ProductBloc>()
+        .add(ProductDetailRequestedEvent(productId: widget.productId));
   }
 
   @override
   Widget build(BuildContext context) {
+    print("🔍 Building ProductPage");
     return BlocBuilder<ProductBloc, ProductState>(
       builder: (context, state) {
+        print("🔄 BlocBuilder state: $state");
         if (state is ProductDetailLoading) {
           return CenterLoading();
         } else if (state is ProductDetailLoaded) {
+          print("📱 Rendering ProductDetailLoaded UI");
           return Scaffold(
             backgroundColor: AppColors.white,
             body: SafeArea(
@@ -50,13 +56,10 @@ class _ProductPageState extends State<ProductPage> {
                           fit: StackFit.expand,
                           children: [
                             Container(
-                              padding: EdgeInsets.only(
-                                top: 20,
-                                bottom: 20,
-                              ),
+                              padding: EdgeInsets.only(top: 20, bottom: 20),
                               height: 372,
                               child: Image.network(
-                                state.product.imageUrl,
+                                state.product.imageUrl ?? "",
                                 loadingBuilder:
                                     (context, child, loadingProgress) {
                                   if (loadingProgress == null) {
@@ -89,12 +92,60 @@ class _ProductPageState extends State<ProductPage> {
                             Positioned(
                               top: 0,
                               right: 10,
-                              child: IconButton(
-                                onPressed: () {},
-                                icon: Icon(
-                                  Icons.favorite,
-                                  size: 34,
-                                ),
+                              child: PopupMenuButton(
+                                position: PopupMenuPosition.under,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16)),
+                                color: AppColors.black.withOpacity(0.8),
+                                clipBehavior: Clip.hardEdge,
+                                surfaceTintColor: AppColors.white,
+                                itemBuilder: (context) => [
+                                  PopupMenuItem(
+                                      onTap: () {
+                                        context
+                                            .read<home.HomeBloc>()
+                                            .add(home.RestoreHomeEvent());
+
+                                        AppNavigator.pushAndRemove(
+                                            context, HomePage());
+                                      },
+                                      child: Container(
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Icon(
+                                              Icons.home,
+                                              color: AppColors.white,
+                                            ),
+                                            Text(
+                                              "หน้าหลัก",
+                                              style: TextThemes.bodyBold
+                                                  .copyWith(
+                                                      color: AppColors.white),
+                                            )
+                                          ],
+                                        ),
+                                      )),
+                                  PopupMenuItem(
+                                      child: Container(
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Icon(
+                                          Icons.report,
+                                          color: AppColors.red,
+                                        ),
+                                        Text(
+                                          "รายงาน",
+                                          style: TextThemes.bodyBold
+                                              .copyWith(color: AppColors.red),
+                                        )
+                                      ],
+                                    ),
+                                  ))
+                                ],
                               ),
                             ),
                           ],
@@ -118,109 +169,124 @@ class _ProductPageState extends State<ProductPage> {
                           ),
                         ),
                         child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              padding:
-                                  EdgeInsets.only(left: 20, right: 20, top: 24),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "${state.product.name}",
-                                    style: TextThemes.headline2,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                  ),
-                                  SizedBox(
-                                    height: 12,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Text(
-                                            "${state.product.brand}",
-                                            style: TextThemes.desc.copyWith(
-                                                color: AppColors.darkGrey),
-                                          ),
-                                          SizedBox(
-                                            height: 8,
-                                          ),
-                                          Text(
-                                            "${state.product.price.min} - ${state.product.price.max} บาท",
-                                            style: TextThemes.bodyBold,
-                                          ),
-                                          SizedBox(
-                                            height: 4,
-                                          ),
-                                          Text(
-                                            "*ราคาขึ้นอยู่กับขนาดของผลิตภัณฑ์",
-                                            style: TextThemes.desc.copyWith(
-                                                color: AppColors.darkGrey),
-                                          )
-                                        ],
-                                      ),
-                                      Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.end,
-                                        children: [
-                                          ShowRating(
-                                              rating: state.product.rating
-                                                  .toString()),
-                                          SizedBox(
-                                            height: 4,
-                                          ),
-                                          Text(
-                                            "${state.product.rating > 70 ? "เหมาะกับคุณมาก" : state.product.rating > 35 ? "เหมาะกับคุณปานกลาง" : state.product.rating > 0 ? "ไม่ค่อยเหมาะกับคุณ" : "ไม่เหมาะกับคุณ"}",
-                                            style: TextThemes.desc.copyWith(
-                                              color: AppColors.darkGrey,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(
+                                    left: 20, right: 20, top: 24),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "${state.product.name}",
+                                      style: TextThemes.headline2,
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    SizedBox(
+                                      height: 12,
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "${state.product.brand}",
+                                              style: TextThemes.desc.copyWith(
+                                                  color: AppColors.darkGrey),
                                             ),
-                                          )
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: 24,
-                                  ),
-                                ],
+                                            SizedBox(
+                                              height: 8,
+                                            ),
+                                            Text(
+                                              (state.product.price.max == "0" &&
+                                                      state.product.price.min ==
+                                                          "0")
+                                                  ? "- บาท"
+                                                  : (state.product.price.max ==
+                                                          state.product.price
+                                                              .min)
+                                                      ? "${state.product.price.max} บาท"
+                                                      : "${state.product.price.max} - ${state.product.price.min} บาท",
+                                              style: TextThemes.bodyBold,
+                                            ),
+                                            SizedBox(
+                                              height: 4,
+                                            ),
+                                            Text(
+                                              "*ราคาขึ้นอยู่กับขนาดของผลิตภัณฑ์",
+                                              style: TextThemes.desc.copyWith(
+                                                  color: AppColors.darkGrey),
+                                            ),
+                                          ],
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.end,
+                                          children: [
+                                            ShowRating(
+                                              rating: state.product.rating
+                                                  .toString(),
+                                            ),
+                                            SizedBox(
+                                              height: 4,
+                                            ),
+                                            Text(
+                                              "${state.product.rating > 75 ? "เหมาะกับคุณมาก" : state.product.rating > 50 ? "เหมาะกับคุณปานกลาง" : state.product.rating > 25 ? "ไม่ค่อยเหมาะกับคุณ" : "ไม่เหมาะกับคุณ"}",
+                                              style: TextThemes.desc.copyWith(
+                                                color: AppColors.darkGrey,
+                                              ),
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: 24,
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            CardBenefitScroll(
-                              userSpecificInfo: state.product.userSpecificInfo,
-                            ),
-                            const SizedBox(
-                              height: 24,
-                            ),
-                            IngredientDetail(
-                              ingredients: state.product.ingredients,
-                            ),
-                            const SizedBox(
-                              height: 24,
-                            ),
-                            Container(
-                              child: Column(
-                                children: [
-                                  Text("ผลิตภัณฑ์ที่คล้ายกัน"),
-                                ],
+                              Container(
+                                padding: EdgeInsets.symmetric(vertical: 16),
+                                decoration: BoxDecoration(
+                                    color: state.product.rating.floor() > 75
+                                        ? AppColors.light_green
+                                        : state.product.rating.floor() > 50
+                                            ? AppColors.yellow
+                                            : state.product.rating.floor() > 25
+                                                ? AppColors.bgOrange
+                                                : AppColors.light_red),
+                                child: CardBenefitScroll(
+                                    userSpecificInfo:
+                                        state.product.userSpecificInfo),
                               ),
-                            ),
-                            const SizedBox(
-                              height: 24,
-                            ),
-                            IngredientRating(
-                              ingredients: state.product.ingredients,
-                            ),
-                          ],
-                        ),
+                              const SizedBox(
+                                height: 24,
+                              ),
+                              IngredientDetail(
+                                  ingredients: state.product.ingredients),
+                              const SizedBox(
+                                height: 24,
+                              ),
+                              Container(
+                                child: Text("data"),
+                              ),
+                              const SizedBox(
+                                height: 24,
+                              ),
+                              IngredientRating(
+                                ingredients: state.product.ingredients,
+                              ),
+                            ]),
                       ),
-                    ),
+                    )
                   ],
                 )),
             bottomNavigationBar: Container(
@@ -241,7 +307,9 @@ class _ProductPageState extends State<ProductPage> {
                   children: [
                     GestureDetector(
                       onTap: () {
-                        print("FAVORITE");
+                        context.read<ProductBloc>().add(ToggleFavoriteEvent(
+                            productId: widget.productId,
+                            isFavorite: !state.isFav));
                       },
                       child: Container(
                         width: MediaQuery.of(context).size.width / 3,
@@ -263,7 +331,9 @@ class _ProductPageState extends State<ProductPage> {
                                   child: child,
                                 );
                               },
-                              child: Icon(Icons.favorite),
+                              child: state.isFav
+                                  ? Icon(Icons.favorite)
+                                  : Icon(Icons.favorite_border),
                             ),
                             SizedBox(
                               width: 8,
@@ -281,12 +351,25 @@ class _ProductPageState extends State<ProductPage> {
                     ),
                     Expanded(
                       child: GestureDetector(
-                        onTap: () {},
+                        onTap: state.isRoutine
+                            ? null
+                            : state.routineCount! >= 10
+                                ? null
+                                : () {
+                                    context.read<ProductBloc>().add(
+                                        AddProductToRoutineEvent(
+                                            productId: widget.productId));
+                                  },
                         child: Container(
                           decoration: BoxDecoration(
-                            color: AppColors.black,
+                            color: state.isRoutine || state.routineCount! >= 10
+                                ? AppColors.grey
+                                : AppColors.black, // เปลี่ยนสีปุ่ม
                             border: Border.all(
-                              color: AppColors.black,
+                              color:
+                                  state.isRoutine || state.routineCount! >= 10
+                                      ? AppColors.grey
+                                      : AppColors.black, // เปลี่ยนสีขอบ
                             ),
                             borderRadius: BorderRadius.circular(16),
                           ),
@@ -296,17 +379,25 @@ class _ProductPageState extends State<ProductPage> {
                             children: [
                               SvgPicture.asset(
                                 SvgAssets.product_routine,
-                                color: AppColors.white,
+                                color:
+                                    state.isRoutine || state.routineCount! >= 10
+                                        ? AppColors.darkGrey
+                                        : AppColors.white,
                               ),
-                              SizedBox(
-                                width: 8,
-                              ),
+                              SizedBox(width: 8),
                               Text(
-                                "เพิ่มลงรูทีน",
+                                state.isRoutine!
+                                    ? "อยู่ในรูทีนแล้ว"
+                                    : state.routineCount! >= 10
+                                        ? "สินค้าเกินกำหนด"
+                                        : "เพิ่มลงรูทีน",
                                 style: TextThemes.bodyBold.copyWith(
-                                  color: AppColors.white,
+                                  color: state.isRoutine! ||
+                                          state.routineCount! >= 10
+                                      ? AppColors.darkGrey
+                                      : AppColors.white,
                                 ),
-                              )
+                              ),
                             ],
                           ),
                         ),
@@ -325,358 +416,6 @@ class _ProductPageState extends State<ProductPage> {
     );
   }
 }
-
-// class ProductPage extends StatelessWidget {
-//   const ProductPage({super.key});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Color(0xffF7F7F7),
-//       bottomNavigationBar: Container(
-//         decoration: BoxDecoration(boxShadow: [
-//           BoxShadow(
-//               color: Colors.black.withOpacity(0.15),
-//               blurRadius: 20,
-//               offset: Offset(0, -4))
-//         ]),
-//         child: BottomAppBar(
-//           color: Colors.white,
-//           padding: EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-//           child: Container(
-//             decoration: BoxDecoration(color: Colors.white),
-//             child: Row(
-//               children: [
-//                 GestureDetector(
-//                   onTap: () {},
-//                   child: Container(
-//                     width: MediaQuery.of(context).size.width / 3,
-//                     padding: EdgeInsets.symmetric(vertical: 10),
-//                     decoration: BoxDecoration(
-//                       border: Border.all(color: Colors.black),
-//                       borderRadius: BorderRadius.circular(16),
-//                     ),
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.center,
-//                       children: [
-//                         AnimatedSwitcher(
-//                           duration: Duration(
-//                               milliseconds:
-//                                   300), // Shortened duration for quicker feedback
-//                           transitionBuilder:
-//                               (Widget child, Animation<double> animation) {
-//                             return ScaleTransition(
-//                               scale: animation,
-//                               child: child,
-//                             );
-//                           },
-//                           child: Icon(Icons.favorite),
-//                         ),
-//                         SizedBox(width: 8),
-//                         Text(
-//                           "ถูกใจ", // "Like" in Thai
-//                           style: Theme.of(context).textTheme.headlineLarge,
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ),
-//                 SizedBox(
-//                   width: 16,
-//                 ),
-//                 Expanded(
-//                   child: GestureDetector(
-//                     onTap: () {},
-//                     child: Container(
-//                         decoration: BoxDecoration(
-//                             color: Colors.black,
-//                             border: Border.all(color: Colors.black),
-//                             borderRadius: BorderRadius.circular(16)),
-//                         padding: EdgeInsets.symmetric(vertical: 10),
-//                         child: Row(
-//                           mainAxisAlignment: MainAxisAlignment.center,
-//                           children: [
-//                             SvgPicture.asset(
-//                               "assets/bottomNavigation/routine.svg",
-//                               color: Colors.white,
-//                             ),
-//                             SizedBox(
-//                               width: 8,
-//                             ),
-//                             Text(
-//                               "เพิ่มลงรูทีน",
-//                               style: Theme.of(context)
-//                                   .textTheme
-//                                   .headlineLarge
-//                                   ?.copyWith(color: Colors.white),
-//                             )
-//                           ],
-//                         )),
-//                   ),
-//                 )
-//               ],
-//             ),
-//           ),
-//         ),
-//       ),
-//       body: FutureBuilder(
-//         future: futureProduct,
-//         builder: (context, snapshot) {
-//           if (snapshot.connectionState == ConnectionState.waiting) {
-//             return Center(
-//               child: CircularProgressIndicator(),
-//             );
-//           } else {
-//             final product = snapshot.data!;
-//             return SafeArea(
-//               top: true,
-//               left: false,
-//               right: false,
-//               bottom: false,
-//               child: CustomScrollView(
-//                 slivers: [
-//                   SliverPersistentHeader(
-//                     delegate: _SliverAppBarDelegate(
-//                       minHeight: 350.0,
-//                       maxHeight: 450.0,
-//                       child: Stack(
-//                         fit: StackFit.expand,
-//                         children: [
-//                           Container(
-//                             padding: EdgeInsets.only(top: 20, bottom: 20),
-//                             height: 372,
-//                             child: Image.asset(
-//                               "${product.productImg.toString()}",
-//                               fit: BoxFit.contain,
-//                             ),
-//                           ),
-//                           Positioned(
-//                             top: 0,
-//                             left: 10,
-//                             child: IconButton(
-//                               icon: const Icon(
-//                                 Icons.chevron_left,
-//                                 color: Colors.black,
-//                                 size: 34,
-//                               ),
-//                               onPressed: () {
-//                                 Navigator.pop(context);
-//                               },
-//                             ),
-//                           ),
-//                           Positioned(
-//                             top: 0,
-//                             right: 10,
-//                             child: GestureDetector(
-//                               onTap: () => onFavToggle(),
-//                               child: AnimatedSwitcher(
-//                                 transitionBuilder: (Widget child,
-//                                     Animation<double> animation) {
-//                                   return ScaleTransition(
-//                                     scale: animation,
-//                                     child: child,
-//                                   );
-//                                 },
-//                                 duration: Duration(milliseconds: 300),
-//                                 child: Icon(
-//                                   isFav
-//                                       ? Icons.favorite
-//                                       : Icons.favorite_border,
-//                                   key: ValueKey<bool>(isFav),
-//                                   color: Colors.black,
-//                                   size: 34,
-//                                 ),
-//                               ),
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                   SliverToBoxAdapter(
-//                     child: Container(
-//                       decoration: BoxDecoration(
-//                         boxShadow: [
-//                           BoxShadow(
-//                               color: Colors.black.withOpacity(0.15),
-//                               blurRadius: 20,
-//                               offset: Offset(0, -4))
-//                         ],
-//                         color: Colors.white,
-//                         borderRadius: BorderRadius.only(
-//                           topLeft: Radius.circular(28),
-//                           topRight: Radius.circular(28),
-//                         ),
-//                       ),
-//                       child: Column(
-//                         crossAxisAlignment: CrossAxisAlignment.start,
-//                         children: [
-//                           Container(
-//                             padding: const EdgeInsets.only(
-//                                 left: 20, right: 20, top: 24),
-//                             child: Column(
-//                               crossAxisAlignment: CrossAxisAlignment.start,
-//                               children: [
-//                                 Text(product.productName.toString(),
-//                                     maxLines: 2,
-//                                     overflow: TextOverflow.ellipsis,
-//                                     style: Theme.of(context)
-//                                         .textTheme
-//                                         .displayMedium),
-//                                 const SizedBox(height: 12),
-
-//                                 //New Row
-//                                 Column(
-//                                   children: [
-//                                     Row(
-//                                       crossAxisAlignment:
-//                                           CrossAxisAlignment.start,
-//                                       mainAxisAlignment:
-//                                           MainAxisAlignment.spaceBetween,
-//                                       children: [
-//                                         Text(
-//                                           product.brand,
-//                                           style: Theme.of(context)
-//                                               .textTheme
-//                                               .bodyMedium
-//                                               ?.copyWith(
-//                                                   color: Color(0xff7E7E7E)),
-//                                         ),
-//                                         Container(
-//                                             decoration: BoxDecoration(
-//                                                 color: int.parse(
-//                                                             product.score) >
-//                                                         70
-//                                                     ? Colors.green
-//                                                     : int.parse(product.score) >
-//                                                             35
-//                                                         ? Color(0xffFFCC00)
-//                                                         : int.parse(product
-//                                                                     .score) >
-//                                                                 0
-//                                                             ? Color(0xffFF9500)
-//                                                             : Colors.red,
-//                                                 border: Border.all(
-//                                                     width: 0,
-//                                                     color: Colors.transparent),
-//                                                 borderRadius:
-//                                                     BorderRadius.circular(4)),
-//                                             padding: EdgeInsets.symmetric(
-//                                                 horizontal: 6, vertical: 4),
-//                                             child: Text(
-//                                               "${product.score}/100",
-//                                               style: Theme.of(context)
-//                                                   .textTheme
-//                                                   .bodyLarge
-//                                                   ?.copyWith(
-//                                                       color: Colors.white),
-//                                             ))
-//                                       ],
-//                                     ),
-//                                     SizedBox(
-//                                       height: 4,
-//                                     ),
-//                                     Row(
-//                                       mainAxisAlignment:
-//                                           MainAxisAlignment.spaceBetween,
-//                                       children: [
-//                                         Text(
-//                                           "${product.price == null || product.price.isEmpty ? "-" : "${product.price}"} บาท",
-//                                           style: Theme.of(context)
-//                                               .textTheme
-//                                               .headlineLarge,
-//                                         ),
-//                                         Text(
-//                                           "เหมาะแหละ",
-//                                           style: Theme.of(context)
-//                                               .textTheme
-//                                               .bodyMedium
-//                                               ?.copyWith(
-//                                                   color: Color(0xff7E7E7E)),
-//                                         )
-//                                       ],
-//                                     )
-//                                   ],
-//                                 ),
-
-//                                 const SizedBox(height: 24),
-//                               ],
-//                             ),
-//                           ),
-//                           Container(
-//                             height: 135,
-//                             child: ListView.separated(
-//                               scrollDirection: Axis.horizontal,
-//                               itemBuilder: (context, index) {
-//                                 if (index == 0) {
-//                                   return const SizedBox(width: 8);
-//                                 } else if (index == mockCardDetail.length + 1) {
-//                                   return const SizedBox(width: 8);
-//                                 } else {
-//                                   final actualIndex = index - 1;
-//                                   return CardInProductPage(
-//                                     state: mockCardDetail[actualIndex]['state']
-//                                         as int,
-//                                     title: mockCardDetail[actualIndex]['title']
-//                                         as String,
-//                                     desc: mockCardDetail[actualIndex]['desc']
-//                                         as String,
-//                                     userDetail: mockCardDetail[actualIndex]
-//                                         ['userDetail'] as String,
-//                                   );
-//                                 }
-//                               },
-//                               separatorBuilder: (context, index) => SizedBox(
-//                                 width: 12,
-//                               ),
-//                               itemCount: mockCardDetail.length + 2,
-//                             ),
-//                           ),
-//                           SizedBox(
-//                             height: 24,
-//                           ),
-//                           ConPros(
-//                               categorizedIngredients: categorizedIngredients),
-//                           SizedBox(
-//                             height: 24,
-//                           ),
-//                           SimilarProduct(),
-//                           SizedBox(
-//                             height: 24,
-//                           ),
-//                           Container(
-//                             padding: EdgeInsets.symmetric(horizontal: 20),
-//                             child: Column(
-//                               children: [
-//                                 LinearScore(
-//                                     good: good,
-//                                     avg: avg,
-//                                     bad: bad,
-//                                     dontKnow: dontKnow),
-//                                 SizedBox(
-//                                   height: 16,
-//                                 ),
-//                                 showAllIngredients(
-//                                     ingredients: product.ingredients),
-//                                 SizedBox(
-//                                   height: 16,
-//                                 )
-//                               ],
-//                             ),
-//                           )
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             );
-//           }
-//         },
-//       ),
-//     );
-//   }
-// }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   _SliverAppBarDelegate({

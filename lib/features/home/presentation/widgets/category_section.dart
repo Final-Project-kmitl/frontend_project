@@ -1,22 +1,39 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:project/core/common/helper/navigation/app_navigation.dart';
 import 'package:project/core/config/theme/app_theme.dart';
+import 'package:project/features/home/presentation/bloc/home_bloc.dart';
+import 'package:project/features/home/presentation/pages/show_benefit.dart';
 
-class CategorySection extends StatelessWidget {
-  const CategorySection({super.key});
+class CategorySection extends StatefulWidget {
+  const CategorySection({
+    super.key,
+  });
+
+  @override
+  State<CategorySection> createState() => _CategorySectionState();
+}
+
+class _CategorySectionState extends State<CategorySection> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    final List<String> categoryProduct = <String>[
-      "รักษาสิว",
-      "ลดเลือนริ้วรอย",
-      "ลดจุดด่างดำ",
-      "กระชับรูขุมขน",
-      "ควบคุมความมัน",
-      "ปรับสีผิวให้สม่ำเสมอ",
-      "ชุ่มชื้น/ปลอบประโลมผิว",
-      "ทำให้ผิวเรียบเนียน"
+    final List<Map<String, dynamic>> categoryProduct = [
+      {"id": 6, "benefit": "รักษาสิว"},
+      {"id": 8, "benefit": "ลดเลือนริ้วรอย"},
+      {"id": 7, "benefit": "ลดจุดด่างดำ"},
+      {"id": 1, "benefit": "กระชับรูขุมขน"},
+      {"id": 2, "benefit": "ควบคุมความมัน"},
+      {"id": 5, "benefit": "ปรับสีผิวให้สม่ำเสมอ"},
+      {"id": 3, "benefit": "ชุ่มชื้น/ปลอบประโลมผิว"},
+      {"id": 4, "benefit": "ทำให้ผิวเรียบเนียน"},
     ];
 
     final List<String> categoryProductImg = <String>[
@@ -65,7 +82,15 @@ class CategorySection extends StatelessWidget {
               itemBuilder: (context, index) {
                 return GestureDetector(
                   onTap: () {
-                    print(index);
+                    context.read<HomeBloc>();
+                    AppNavigator.push(
+                        context,
+                        BlocProvider.value(
+                          value: context.read<HomeBloc>(),
+                          child: ShowBenefit(
+                              benefitId: categoryProduct[index]['id'],
+                              benefit: categoryProduct[index]['benefit']),
+                        ));
                   },
                   child: Column(
                     children: [
@@ -92,7 +117,7 @@ class CategorySection extends StatelessWidget {
                         child: Container(
                           width: 78,
                           child: Text(
-                            categoryProduct[index],
+                            categoryProduct[index]['benefit'],
                             style: TextThemes.desc,
                             textAlign: TextAlign.center,
                             softWrap: true,

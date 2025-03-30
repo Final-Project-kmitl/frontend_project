@@ -1,4 +1,3 @@
-
 import 'package:project/core/constants/api_url.dart';
 import 'package:project/core/constants/share_pref.dart';
 import 'package:project/core/error/server_failure.dart';
@@ -14,12 +13,13 @@ abstract class FavRemoteDatasource {
 }
 
 class apiServiceFavorite implements FavRemoteDatasource {
-  final userId = sl<SharedPreferences>().getString(shared_pref.userId)!;
+  final userId = sl<SharedPreferences>().getString(shared_pref.token);
 
   final dio = sl<DioClient>();
+  //รับข้อมูลที่ user ถูกใต
   @override
   Future<List<FavProductModel>> fetchFavProduct() async {
-    final url = Uri.parse(AppUrl.getFavoriteProduct(userId));
+    final url = Uri.parse(AppUrl.getFavoriteProduct);
     print("URL : $url");
 
     try {
@@ -38,9 +38,10 @@ class apiServiceFavorite implements FavRemoteDatasource {
     }
   }
 
+  // user unfavorite
   @override
   Future<void> unFavProduct(Set<int> productId) async {
-    final url = Uri.parse("${AppUrl.favorite_delete}");
+    final url = Uri.parse("${AppUrl.favorite_delete_add}");
     try {
       if (productId.length == 0) {
         print("no product select");

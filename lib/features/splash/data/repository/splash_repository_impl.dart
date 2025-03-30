@@ -11,4 +11,10 @@ class SplashRepositoryImpl extends SplashRepository {
   Future<Either<Failure, bool>> checkUser() async {
     return await splashApiService.chechUserAPI();
   }
+  
+  @override
+  Future<List<String>> getInitialData() {
+    // TODO: implement getInitialData
+    throw UnimplementedError();
+  }
 }

@@ -16,6 +16,9 @@ class ProductModel extends ProductEntity {
     required super.view,
     required super.productBenefits,
     required super.userSpecificInfo,
+    required super.isFav,
+    required super.isRoutine,
+    required super.routineCount,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
@@ -23,9 +26,9 @@ class ProductModel extends ProductEntity {
       id: json['id'],
       name: json['name'],
       brand: json['brand'],
-      rating: json['rating'].toDouble(),
+      rating: double.parse(json['rating']),
       price: PriceModel.fromJson(json['price']),
-      imageUrl: json['image_url'],
+      imageUrl: json['image_url'] ?? "",
       skinTypes: (json['skinTypes'] as List)
           .map((e) => SkinTypeModel.fromJson(e))
           .toList(),
@@ -38,9 +41,14 @@ class ProductModel extends ProductEntity {
           .map((e) => IngredientModel.fromJson(e))
           .toList(),
       view: json['view'],
-      productBenefits: List<String>.from(json['product_benefits']),
+      productBenefits: (json['product_benefits'] as List)
+          .map((productBenefit) => ProductBenefitModel.fromJson(productBenefit))
+          .toList(),
       userSpecificInfo:
           UserSpecificInfoModel.fromJson(json['userSpecificInfo']),
+      isFav: json['isFav'] ?? false,
+      isRoutine: json['isRoutine'] ?? true,
+      routineCount: json['routineCount'] ?? 0,
     );
   }
 
@@ -62,6 +70,79 @@ class ProductModel extends ProductEntity {
       'view': view,
       'product_benefits': productBenefits,
       'userSpecificInfo': (userSpecificInfo as UserSpecificInfoModel).toJson(),
+      "isFav": isFav,
+      "isRoutine": isRoutine,
+    };
+  }
+
+  ProductModel copyWith({
+    bool? isFav,
+    bool? isRoutine,
+    int? routineCount,
+  }) {
+    return ProductModel(
+      id: id,
+      name: name,
+      brand: brand,
+      rating: rating,
+      price: price,
+      imageUrl: imageUrl,
+      skinTypes: skinTypes,
+      productTypes: productTypes,
+      benefits: benefits,
+      concerns: concerns,
+      ingredients: ingredients,
+      view: view,
+      productBenefits: productBenefits,
+      userSpecificInfo: userSpecificInfo,
+      isFav: isFav ?? this.isFav,
+      isRoutine: isRoutine ?? this.isRoutine,
+      routineCount: routineCount ?? this.routineCount,
+    );
+  }
+}
+
+class FavoriteProductModel extends FavoriteProductEntity {
+  FavoriteProductModel(
+      {required super.brand,
+      required super.id,
+      required super.image_url,
+      required super.max_price,
+      required super.min_price,
+      required super.name,
+      required super.view});
+
+  factory FavoriteProductModel.fromJson(Map<String, dynamic> json) {
+    return FavoriteProductModel(
+        brand: json['brand'],
+        id: json['id'],
+        image_url: json['image_url'],
+        max_price: json['max_price'],
+        min_price: json['min_price'],
+        name: json['name'],
+        view: json['view']);
+  }
+  FavoriteProductEntity toEntity() {
+    return FavoriteProductEntity(
+      id: id,
+      brand: brand,
+      name: name,
+      min_price: min_price,
+      max_price: max_price,
+      image_url: image_url,
+      view: view,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'brand': brand,
+      'name': name,
+      'image_url': image_url,
+      'max_price': max_price,
+      'min_price': min_price,
+      'view': view,
     };
   }
 }
@@ -144,7 +225,7 @@ class IngredientModel extends IngredientEntity {
       return IngredientModel(
         id: json['id'] ?? 0,
         name: json['name'] ?? '',
-        rating: json['rating'] ?? 0,
+        rating: json['rating'] ?? "not_rated",
         categories: json['categories'] != null
             ? (json['categories'] as List)
                 .map((e) => CategoryModel.fromJson(e as Map<String, dynamic>))
@@ -166,7 +247,7 @@ class IngredientModel extends IngredientEntity {
       return IngredientModel(
         id: 0,
         name: '',
-        rating: 0,
+        rating: 'not rated',
         categories: [],
         benefits: [],
         concerns: [],
@@ -226,6 +307,16 @@ class BenefitModel extends BenefitEntity {
       'id': id,
       'name': name,
     };
+  }
+}
+
+class ProductBenefitModel extends ProductBenefitEntity {
+  ProductBenefitModel({required super.benefit, required super.ingredients});
+
+  factory ProductBenefitModel.fromJson(Map<String, dynamic> json) {
+    return ProductBenefitModel(
+        benefit: json['benefit'],
+        ingredients: List<String>.from(json['ingredients']));
   }
 }
 
@@ -385,51 +476,24 @@ class ProblemModel extends ProblemEntity {
 
 class IngredientConcernModel extends IngredientConcernEntity {
   IngredientConcernModel({
-    required super.ingredient,
-    required super.concerns,
+    required super.concern,
+    required super.ingredients,
   });
 
   factory IngredientConcernModel.fromJson(Map<String, dynamic> json) {
-    try {
-      return IngredientConcernModel(
-        ingredient: json['ingredient'] != null
-            ? IngredientModel.fromJson(
-                json['ingredient'] as Map<String, dynamic>)
-            : IngredientModel(
-                id: 0,
-                name: '',
-                rating: 0,
-                categories: [],
-                benefits: [],
-                concerns: [],
-              ),
-        concerns: json['concerns'] != null
-            ? (json['concerns'] as List)
-                .map((e) => ConcernModel.fromJson(e as Map<String, dynamic>))
-                .toList()
-            : [],
-      );
-    } catch (e) {
-      print('Error parsing IngredientConcernModel: $e');
-      // Return a default model if parsing fails
-      return IngredientConcernModel(
-        ingredient: IngredientModel(
-          id: 0,
-          name: '',
-          rating: 0,
-          categories: [],
-          benefits: [],
-          concerns: [],
-        ),
-        concerns: [],
-      );
-    }
+    return IngredientConcernModel(
+      concern:
+          ConcernModel.fromJson(json['concern']), // concern เป็น object เดียว
+      ingredients: (json['ingredients'] as List)
+          .map((e) => IngredientModel.fromJson(e))
+          .toList(),
+    );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'ingredient': (ingredient as IngredientModel).toJson(),
-      'concerns': concerns.map((e) => (e as ConcernModel).toJson()).toList(),
+      'concern': (concern as ConcernModel).toJson(),
+      'ingredients': ingredients.map((e) => (e as IngredientModel)).toList(),
     };
   }
 }

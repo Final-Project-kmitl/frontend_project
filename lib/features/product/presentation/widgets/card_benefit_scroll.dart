@@ -24,8 +24,8 @@ class CardBenefitScroll extends StatelessWidget {
       if (userSpecificInfo.ingredientConcerns.isNotEmpty)
         ...userSpecificInfo.ingredientConcerns.map((item) => {
               'category': 'ingredientConcerns',
-              'ingredient': item.ingredient.name,
-              'concerns': item.concerns.map((c) => c.name).toList(),
+              'concerns': item.concern.name,
+              'ingredients': item.ingredients.map((c) => c.name).toList(),
             }),
 
       // ✅ รายการปัญหาผิวที่ช่วยแก้ไขได้ (พื้นหลังสีเขียว)
@@ -62,7 +62,7 @@ class CardBenefitScroll extends StatelessWidget {
               height: 116,
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.bg_score_card_red,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: IntrinsicWidth(
@@ -110,7 +110,7 @@ class CardBenefitScroll extends StatelessWidget {
               height: 116,
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.bg_score_card_orange,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: IntrinsicWidth(
@@ -119,14 +119,14 @@ class CardBenefitScroll extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      item['ingredient'],
+                      "${item['concerns'] == "มีจุดด่างดำ" ? 'จุดด่างดำ' : item['concerns'] == "เป็นสิว" ? 'สิว' : item['concerns'] == "มีริ้วรอย" ? 'ริ้วรอย' : item['concerns'] == "รูขุมขนกว้าง" ? 'รูขุมขนกว้าง' : item['concerns'] == "หน้ามัน" ? 'หน้ามัน' : item['concerns'] == "สีผิวไม่สม่ำเสมอ" ? 'สีผิวไม่สม่ำเสมอ' : item['concerns'] == "ผิวขาดความชุ่มชื้น/แสบแดง" ? 'อาจทำให้ผิวขาดความชุ่มชื้น/แสบแดง' : 'ผิวไม่เรียบเนียน'}",
                       style: TextThemes.bodyBold,
                     ),
                     SizedBox(height: 12),
                     ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: 210),
+                      constraints: BoxConstraints(maxWidth: 240),
                       child: Text(
-                        "ผลิตภัณฑ์นี้มีส่วนผสมของ ${item['concerns'][0]} ${item['concerns'].length > 1 ? "เเละอื่นๆ" : ""} ซึ่งอาจส่งผลต่อ ${item['ingredient']}",
+                        "ผลิตภัณฑ์นี้มีส่วนผสมของ ${item['ingredients'][0]} ${item['concerns'].length > 1 ? "เเละอื่นๆ" : ""} ซึ่งอาจส่งผล${item['concerns'] == "มีจุดด่างดำ" ? 'จุดด่างดำบนใบหน้า' : item['concerns'] == "เป็นสิว" ? 'สิวบนใบหน้า' : item['concerns'] == "มีริ้วรอย" ? 'ริ้วรอยบนใบหน้า' : item['concerns'] == "รูขุมขนกว้าง" ? 'ทำให้รูขุมขนกว้าง' : item['concerns'] == "หน้ามัน" ? 'ต่อความหน้ามัน' : item['concerns'] == "สีผิวไม่สม่ำเสมอ" ? 'ทำให้สีผิวไม่สม่ำเสมอ' : item['concerns'] == "ผิวขาดความชุ่มชื้น/แสบแดง" ? 'ทำให้ผิวขาดความชุ่มชื้น/แสบแดง' : 'ทำให้ผิวไม่เรียบเนียน'}",
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style:
@@ -158,7 +158,7 @@ class CardBenefitScroll extends StatelessWidget {
               height: 116,
               padding: EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: AppColors.bg_score_card_green,
+                color: AppColors.white,
                 borderRadius: BorderRadius.circular(10),
               ),
               child: IntrinsicWidth(
@@ -167,14 +167,14 @@ class CardBenefitScroll extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      item['problem'],
+                      "${item['problem'] == "มีจุดด่างดำ" ? 'ช่วยลดจุดด่างดำ' : item['problem'] == "เป็นสิว" ? 'ช่วยลดสิว' : item['problem'] == "มีริ้วรอย" ? 'ลดริ้วรอย' : item['problem'] == "รูขุมขนกว้าง" ? 'กระชับรูขุมขน' : item['problem'] == "หน้ามัน" ? 'ลดความมัน' : item['problem'] == "สีผิวไม่สม่ำเสมอ" ? 'ช่วยให้ผิวสม่ำเสมอ' : item['problem'] == "ผิวขาดความชุ่มชื้น/แสบแดง" ? 'เพิ่มความชุ่มชื้น' : 'ช่วยให้ผิวเรียบเนียน'}",
                       style: TextThemes.bodyBold,
                     ),
                     SizedBox(height: 12),
                     ConstrainedBox(
                       constraints: BoxConstraints(maxWidth: 210),
                       child: Text(
-                        "ผลิตภัณฑ์นี้มีส่วนผสมของ ${item['solvingIngredients'][0]} ${item['solvingIngredients'].length > 1 ? "เเละอื่นๆ" : ""} ซึ่ง ${item['problem']}",
+                        "ผลิตภัณฑ์นี้มีส่วนผสมของ ${item['solvingIngredients'][0]} ${item['solvingIngredients'].length > 1 ? "เเละอื่นๆ" : ""} ซึ่ง${item['problem'] == "มีจุดด่างดำ" ? 'ช่วยลดจุดด่างดำ' : item['problem'] == "เป็นสิว" ? 'ช่วยลดสิว' : item['problem'] == "มีริ้วรอย" ? 'ลดริ้วรอย' : item['problem'] == "รูขุมขนกว้าง" ? 'กระชับรูขุมขน' : item['problem'] == "หน้ามัน" ? 'ลดความมัน' : item['problem'] == "สีผิวไม่สม่ำเสมอ" ? 'ช่วยให้ผิวสม่ำเสมอ' : item['problem'] == "ผิวขาดความชุ่มชื้น/แสบแดง" ? 'เพิ่มความชุ่มชื้นให้กับผิว' : 'ช่วยทำให้ผิวเรียบเนียน'}",
                         maxLines: 2,
                         overflow: TextOverflow.ellipsis,
                         style:
@@ -192,8 +192,9 @@ class CardBenefitScroll extends StatelessWidget {
                           width: 6,
                         ),
                         Text(
-                          "คุณมีปัญหาผิว ${item['problem']}",
+                          "คุณมีปัญหา${item['problem']}",
                           style: TextThemes.desc,
+                          overflow: TextOverflow.ellipsis,
                         )
                       ],
                     )

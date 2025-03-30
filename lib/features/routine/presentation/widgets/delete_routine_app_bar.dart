@@ -8,16 +8,23 @@ class DeleteRoutineAppBar extends StatelessWidget
   final Size preferredSize;
   final VoidCallback fn;
   final bool selectNotEmpty;
+  final bool isScrolled;
 
-  const DeleteRoutineAppBar(
-      {Key? key, required this.fn, required this.selectNotEmpty})
-      : preferredSize = const Size.fromHeight(kToolbarHeight),
+  const DeleteRoutineAppBar({
+    Key? key,
+    required this.fn,
+    required this.selectNotEmpty,
+    required this.isScrolled,
+  })  : preferredSize = const Size.fromHeight(kToolbarHeight),
         super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      elevation: 0,
+      elevation: isScrolled ? 10 : 0,
+      shadowColor:
+          isScrolled ? AppColors.black.withOpacity(0.4) : Colors.transparent,
+      surfaceTintColor: AppColors.transparent,
       backgroundColor: AppColors.white,
       actions: [
         Row(

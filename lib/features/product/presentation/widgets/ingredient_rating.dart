@@ -18,16 +18,18 @@ class IngredientRating extends StatelessWidget {
     var not_rate = 0;
 
     for (var ingredient in ingredients) {
-      if (ingredient.rating == 1 || ingredient.rating == 2) {
+      if (ingredient.rating == "best" || ingredient.rating == 'good') {
         good += 1;
-      } else if (ingredient.rating == 3) {
+      } else if (ingredient.rating == 'average') {
         avg += 1;
-      } else if (ingredient.rating == 4 || ingredient.rating == 5) {
+      } else if (ingredient.rating == 'bad' || ingredient.rating == 'worst') {
         bad += 1;
       } else {
         not_rate += 1;
       }
     }
+
+    print('good : ${good},avg : ${avg},bad : ${bad} , not : ${not_rate}');
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -275,14 +277,16 @@ class IngredientRating extends StatelessWidget {
                                 Container(
                                   decoration: BoxDecoration(
                                     shape: BoxShape.circle,
-                                    color: (ingredients[index].rating == 1 ||
-                                            ingredients[index].rating == 2)
+                                    color: (ingredients[index].rating ==
+                                                'good' ||
+                                            ingredients[index].rating == 'best')
                                         ? AppColors.light_green
-                                        : ingredients[index].rating == 3
+                                        : ingredients[index].rating == 'average'
                                             ? AppColors.paleBlue
-                                            : (ingredients[index].rating == 4 ||
+                                            : (ingredients[index].rating ==
+                                                        'bad' ||
                                                     ingredients[index].rating ==
-                                                        5)
+                                                        'worst')
                                                 ? AppColors.light_red
                                                 : AppColors.grey,
                                   ),
@@ -292,16 +296,19 @@ class IngredientRating extends StatelessWidget {
                                       child: Text(
                                     "${index + 1}",
                                     style: TextThemes.bodyBold.copyWith(
-                                      color: (ingredients[index].rating == 1 ||
-                                              ingredients[index].rating == 2)
+                                      color: (ingredients[index].rating ==
+                                                  'good' ||
+                                              ingredients[index].rating ==
+                                                  'best')
                                           ? AppColors.green
-                                          : ingredients[index].rating == 3
+                                          : ingredients[index].rating ==
+                                                  'average'
                                               ? AppColors.miscellaneous
                                               : (ingredients[index].rating ==
-                                                          4 ||
+                                                          'bad' ||
                                                       ingredients[index]
                                                               .rating ==
-                                                          5)
+                                                          'worst')
                                                   ? AppColors.red
                                                   : AppColors.darkGrey,
                                     ),
@@ -310,19 +317,24 @@ class IngredientRating extends StatelessWidget {
                                 SizedBox(
                                   width: 16,
                                 ),
-                                Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      ingredients[index].name,
-                                      style: TextThemes.bodyBold,
-                                    ),
-                                    Text(
-                                      "${categoriesText}",
-                                      style: TextThemes.desc
-                                          .copyWith(color: AppColors.darkGrey),
-                                    ),
-                                  ],
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        ingredients[index].name,
+                                        style: TextThemes.bodyBold,
+                                      ),
+                                      Text(
+                                        "${categoriesText}",
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 1,
+                                        style: TextThemes.desc.copyWith(
+                                            color: AppColors.darkGrey),
+                                      ),
+                                    ],
+                                  ),
                                 )
                               ],
                             );

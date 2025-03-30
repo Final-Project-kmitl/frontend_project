@@ -8,6 +8,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class SplashApiService {
   Future<Either<Failure, bool>> chechUserAPI();
+
+  Future<List<String>> fetchInitalData();
 }
 
 class SplashApiServiceImpl extends SplashApiService {
@@ -21,10 +23,13 @@ class SplashApiServiceImpl extends SplashApiService {
       if (userId == null) {
         return Left(ServerFailure("User is null"));
       } else {
-        final res = await dio.get("${AppUrl.baseUrl}/user/$userId");
+        final res = await dio.post("${AppUrl.baseUrl}/auth/authenticate",
+            data: {"userId": userId});
 
         if (res.statusCode == 200) {
-          print(res.statusCode);
+          final accessToken = res.data['accessToken'];
+          sl<SharedPreferences>().setString("token", accessToken);
+          print("TOKEN : ${accessToken}");
           return Right(true);
         }
         return Left(ServerFailure("User not found"));
@@ -32,5 +37,11 @@ class SplashApiServiceImpl extends SplashApiService {
     } catch (e) {
       return Left(ServerFailure("Error: $e"));
     }
+  }
+
+  @override
+  Future<List<String>> fetchInitalData() {
+    // TODO: implement fetchInitalData
+    throw UnimplementedError();
   }
 }

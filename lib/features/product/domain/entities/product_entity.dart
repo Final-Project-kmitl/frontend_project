@@ -10,9 +10,14 @@ class ProductEntity {
   final List<String> benefits;
   final List<String> concerns;
   final List<IngredientEntity> ingredients;
-  final String view;
-  final List<String> productBenefits;
+  final int view;
+  final List<ProductBenefitEntity> productBenefits;
   final UserSpecificInfoEntity userSpecificInfo;
+  final bool isFav;
+  final bool isRoutine;
+  final int routineCount;
+  final SkincareDetailsEntity? skincareDetails;
+  final String? barcodeId;
 
   ProductEntity({
     required this.id,
@@ -23,12 +28,61 @@ class ProductEntity {
     required this.imageUrl,
     required this.skinTypes,
     required this.productTypes,
+    required this.isRoutine,
     required this.benefits,
     required this.concerns,
     required this.ingredients,
     required this.view,
     required this.productBenefits,
     required this.userSpecificInfo,
+    required this.isFav,
+    required this.routineCount,
+    this.skincareDetails,
+    this.barcodeId,
+  });
+
+  ProductEntity copyWith({bool? isFav}) {
+    return ProductEntity(
+      id: id,
+      name: name,
+      brand: brand,
+      rating: rating,
+      price: price,
+      imageUrl: imageUrl,
+      isRoutine: isRoutine,
+      routineCount: routineCount,
+      skinTypes: skinTypes,
+      productTypes: productTypes,
+      benefits: benefits,
+      concerns: concerns,
+      ingredients: ingredients,
+      view: view,
+      productBenefits: productBenefits,
+      userSpecificInfo: userSpecificInfo,
+      isFav: isFav ?? this.isFav,
+      skincareDetails: skincareDetails,
+      barcodeId: barcodeId,
+    );
+  }
+}
+
+class FavoriteProductEntity {
+  final int id;
+  final String brand;
+  final String name;
+  final String min_price;
+  final String max_price;
+  final String image_url;
+  final String view;
+
+  FavoriteProductEntity({
+    required this.brand,
+    required this.id,
+    required this.image_url,
+    required this.max_price,
+    required this.min_price,
+    required this.name,
+    required this.view,
   });
 }
 
@@ -65,7 +119,7 @@ class ProductTypeEntity {
 class IngredientEntity {
   final int id;
   final String name;
-  final int rating;
+  final String rating;
   final List<CategoryEntity> categories;
   final List<BenefitEntity> benefits;
   final List<ConcernEntity> concerns;
@@ -165,11 +219,37 @@ class ProblemEntity {
 }
 
 class IngredientConcernEntity {
-  final IngredientEntity ingredient;
-  final List<ConcernEntity> concerns;
+  final ConcernEntity concern;
+  final List<IngredientEntity> ingredients;
 
   IngredientConcernEntity({
-    required this.ingredient,
-    required this.concerns,
+    required this.concern,
+    required this.ingredients,
+  });
+}
+
+class ProductBenefitEntity {
+  final String benefit;
+  final List<String> ingredients;
+
+  ProductBenefitEntity({
+    required this.benefit,
+    required this.ingredients,
+  });
+}
+
+class SkincareDetailsEntity {
+  final int allergyScore;
+  final int skinTypeScore;
+  final int concernScore;
+  final int worseningScore;
+  final int irritationScore;
+
+  SkincareDetailsEntity({
+    required this.allergyScore,
+    required this.skinTypeScore,
+    required this.concernScore,
+    required this.worseningScore,
+    required this.irritationScore,
   });
 }

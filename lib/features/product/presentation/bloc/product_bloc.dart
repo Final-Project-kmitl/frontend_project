@@ -1,34 +1,111 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
-import 'package:dartz/dartz.dart';
 import 'package:equatable/equatable.dart';
+import 'package:project/core/constants/exception.dart';
+import 'package:project/features/home/presentation/bloc/home_bloc.dart';
 import 'package:project/features/product/domain/entities/product_entity.dart';
+import 'package:project/features/product/domain/usecases/add_product_routine.dart';
 import 'package:project/features/product/domain/usecases/get_product_detail.dart';
+import 'package:project/features/product/domain/usecases/toggle_favorite_product.dart';
 
 part 'product_event.dart';
 part 'product_state.dart';
 
 class ProductBloc extends Bloc<ProductEvent, ProductState> {
   final GetProductDetail getProductDetail;
+  final ToggleFavoriteProduct toggleFavoriteProduct;
+  final HomeBloc homeBloc;
+  final AddProductRoutine addProductRoutine;
   ProductBloc({
     required this.getProductDetail,
-  }) : super(ProductInitial()) {
+    required this.toggleFavoriteProduct,
+    required this.homeBloc,
+    required this.addProductRoutine,
+  }) : super(ProductDetailLoading()) {
     on<ProductDetailRequestedEvent>(_onProductLoad);
+    on<ToggleFavoriteEvent>(_onToggleFavorite);
+    on<AddProductToRoutineEvent>(_onAddProductToRoutineEvent);
+  }
+
+  Future<void> _onAddProductToRoutineEvent(
+      AddProductToRoutineEvent event, Emitter<ProductState> emit) async {
+    final currentState = state as ProductDetailLoaded;
+
+    final newRoutineCount = currentState.routineCount! + 1;
+    try {
+      await addProductRoutine(event.productId);
+
+      emit(currentState.copyWith(
+          isRoutine: true, routineCoutn: newRoutineCount));
+    } on SocketException {
+      ProductDetailError(message: Exception_String.netwok_error);
+    } on TimeoutException {
+      ProductDetailError(message: Exception_String.timeout_error);
+    } catch (e) {
+      ProductDetailError(message: e.toString());
+    }
+  }
+
+  Future<void> _onToggleFavorite(
+      ToggleFavoriteEvent event, Emitter<ProductState> emit) async {
+    final currentState = state;
+    if (currentState is ProductDetailLoaded) {
+      final bool newFavStatus = !currentState.isFav;
+
+      try {
+        await toggleFavoriteProduct(event.productId, newFavStatus);
+
+        final updatedProduct =
+            currentState.product.copyWith(isFav: newFavStatus);
+
+        emit(ProductDetailLoaded(
+          product: updatedProduct,
+          isFav: newFavStatus,
+          isRoutine: currentState.isRoutine,
+          routineCount: currentState.routineCount,
+        ));
+
+        // homeBloc.add(UpdateUIEvent(
+        //     isFavorite: newFavStatus, productId: event.productId));
+
+        print("⭐ Favorite Updated: ${updatedProduct.name} -> $newFavStatus");
+      } catch (e) {
+        print("❌ Failed to update favorite: ${e.toString()}");
+      }
+    }
   }
 
   Future<void> _onProductLoad(
       ProductDetailRequestedEvent event, Emitter<ProductState> emit) async {
     emit(ProductDetailLoading());
+    print("📌 เริ่มโหลด productId: ${event.productId}");
 
-    await Future.delayed(Duration(milliseconds: 300));
     try {
-      final productDetail = await getProductDetail(event.productId);
+      final res = await getProductDetail(event.productId);
+      print("✅ ข้อมูลที่ได้จาก API: $res");
 
-      emit(ProductDetailLoaded(product: productDetail));
+      if (res == null) {
+        throw Exception("API ส่งค่ากลับมาเป็น null");
+      }
 
-      print("✅${event.productId} โหลดสำเร็จ: ${productDetail}");
-    } catch (e) {
-      print("❌ ${event.productId} ล้มเหลว: $e");
-      emit(ProductDetailError(message: "Fail to load : ${e.toString()}"));
+      // ตรวจสอบให้แน่ใจว่าค่าเหล่านี้มีข้อมูลเสมอ แม้จะเป็นค่าเริ่มต้น
+      final bool isRoutine = res.isRoutine;
+      final int routineCount = res.routineCount ?? 0;
+      final bool isFav = res.isFav;
+
+      emit(ProductDetailLoaded(
+          product: res,
+          isFav: isFav,
+          isRoutine: isRoutine,
+          routineCount: routineCount));
+
+      print("✅ โหลดสำเร็จ: ${event.productId}");
+    } catch (e, stackTrace) {
+      print("❌ โหลดล้มเหลว: $e");
+      print(stackTrace);
+      emit(ProductDetailError(message: "Fail to load: ${e.toString()}"));
     }
   }
 }

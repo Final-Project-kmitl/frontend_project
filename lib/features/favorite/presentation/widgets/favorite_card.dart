@@ -56,26 +56,33 @@ class FavoriteCard extends StatelessWidget {
                   SizedBox(
                     height: 140,
                     width: double.infinity,
-                    child: Image.network(
-                      product.img,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) {
-                          return child;
-                        } else {
-                          return CircularProgressIndicator(); // ถ้ายังโหลดอยู่ ให้แสดง progress bar
-                        }
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return Container(
-                          color: AppColors.white,
-                          child: Image.asset(
+                    child: Container(
+                      padding: EdgeInsets.all(15),
+                      decoration: BoxDecoration(color: AppColors.white),
+                      child: Image.network(
+                        product.img ?? "",
+                        loadingBuilder: (context, child, loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          } else {
+                            return Center(
+                              child: Text(
+                                "Loading...",
+                                style: TextThemes.desc
+                                    .copyWith(color: AppColors.grey),
+                              ),
+                            ); // ถ้ายังโหลดอยู่ ให้แสดง progress bar
+                          }
+                        },
+                        errorBuilder: (context, error, stackTrace) {
+                          return Image.asset(
                             "assets/test_img.png",
                             fit: BoxFit.contain,
-                          ),
-                        );
-                      },
-                      fit: BoxFit
-                          .contain, // ปรับให้ภาพเต็มพื้นที่ โดยอาจตัดบางส่วนออก
+                          );
+                        },
+                        fit: BoxFit
+                            .contain, // ปรับให้ภาพเต็มพื้นที่ โดยอาจตัดบางส่วนออก
+                      ),
                     ),
                   ),
                   Positioned(
@@ -108,7 +115,9 @@ class FavoriteCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  "${product.minPrice} - ${product.maxPrice} บาท",
+                  product.maxPrice == product.minPrice
+                      ? "- บาท"
+                      : "${product.maxPrice} - ${product.minPrice} บาท",
                   style: TextThemes.bodyBold,
                 ),
                 Container(

@@ -9,4 +9,19 @@ class ProductDetailRepositoryImpl implements ProductDetailRepository {
   Future<ProductEntity> productDetail(int productId) async {
     return await productDatasource.fetchProduct(productId);
   }
+
+  @override
+  Future<void> addFavoriteProduct(int productId) async {
+    return await productDatasource.addFavorite(productId);
+  }
+
+  @override
+  Future<void> removeFavoriteProduct(int productId) async {
+    return await productDatasource.removeFavorite(productId);
+  }
+
+  @override
+  Future<void> addRoutineProduct(int productId) async {
+    return await productDatasource.addRoutine(productId);
+  }
 }

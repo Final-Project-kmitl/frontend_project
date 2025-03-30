@@ -1,19 +1,23 @@
 import 'package:project/features/routine/domain/entities/product_entity.dart';
 
 class ProductModel extends ProductEntity {
-  ProductModel(
-      {required super.id,
-      required super.brand,
-      required super.product,
-      required super.img});
+  ProductModel({
+    required super.id,
+    required super.brand,
+    required super.product,
+    required super.img,
+    required super.isRoutine,
+  });
 
   // Json -> Obj
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-        id: int.parse(json["id"]),
-        brand: json['brand'],
-        product: json['product'],
-        img: json['img']);
+      id: json['id'],
+      brand: json['brand'],
+      product: json['name'],
+      img: json['image_url'] ?? "",
+      isRoutine: false,
+    );
   }
 
   // obj -> json
@@ -24,5 +28,21 @@ class ProductModel extends ProductEntity {
       'product': product,
       'img': img,
     };
+  }
+
+  ProductEntity copyWith({
+    int? id,
+    String? brand,
+    String? product,
+    String? img,
+    bool? isRoutine,
+  }) {
+    return ProductEntity(
+      id: id ?? this.id,
+      brand: brand ?? this.brand,
+      product: product ?? this.product,
+      img: img ?? this.img,
+      isRoutine: isRoutine ?? this.isRoutine,
+    );
   }
 }

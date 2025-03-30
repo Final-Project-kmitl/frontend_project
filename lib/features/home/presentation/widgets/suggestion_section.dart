@@ -8,10 +8,10 @@ import 'package:project/features/home/presentation/bloc/home_bloc.dart';
 import 'package:project/features/home/presentation/widgets/show_suggestion.dart';
 import 'package:project/features/product/presentation/pages/product_page.dart';
 
-class SuggestionSection extends StatefulWidget {
+class SuggestionSection extends StatelessWidget {
   final String title;
   final List<ProductEntity> product;
-  final List<FavoriteProductEntity> favProduct;
+  final List<int> favProduct;
   const SuggestionSection({
     super.key,
     required this.title,
@@ -19,16 +19,11 @@ class SuggestionSection extends StatefulWidget {
     required this.favProduct,
   });
 
-  @override
-  State<SuggestionSection> createState() => _SuggestionSectionState();
-}
-
-class _SuggestionSectionState extends State<SuggestionSection> {
   //สร้าง set ของ fav easy to check
   @override
   Widget build(BuildContext context) {
     IconData getFavIcon(int productId) {
-      bool isFav = widget.favProduct.any((fav) => fav.id == productId);
+      bool isFav = favProduct.any((fav) => fav == productId);
       return isFav ? Icons.favorite : Icons.favorite_border;
     }
 
@@ -41,7 +36,7 @@ class _SuggestionSectionState extends State<SuggestionSection> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                widget.title,
+                title,
                 style: TextThemes.headline2,
               ),
               GestureDetector(
@@ -49,9 +44,9 @@ class _SuggestionSectionState extends State<SuggestionSection> {
                   AppNavigator.push(
                       context,
                       ShowSuggestion(
-                        title: widget.title,
-                        favProduct: widget.favProduct,
-                        product: widget.product,
+                        title: title,
+                        favProduct: favProduct,
+                        product: product,
                       ));
                 },
                 child: Row(
@@ -80,19 +75,17 @@ class _SuggestionSectionState extends State<SuggestionSection> {
                 height: 210,
                 child: ListView.builder(
                   scrollDirection: Axis.horizontal,
-                  itemCount: widget.product.length + 2,
+                  itemCount: product.length + 2,
                   itemBuilder: (context, index) {
-                    if (index == 0 || widget.product.length + 1 == index) {
+                    if (index == 0 || product.length + 1 == index) {
                       return Container(
                         width: 10,
                       );
                     }
                     return GestureDetector(
                       onTap: () {
-                        AppNavigator.push(
-                            context,
-                            ProductPage(
-                                productId: widget.product[index - 1].id));
+                        AppNavigator.push(context,
+                            ProductPage(productId: product[index - 1].id));
                       },
                       child: Container(
                         width: 140,
@@ -108,20 +101,25 @@ class _SuggestionSectionState extends State<SuggestionSection> {
                                 .start, // Align children to the left
                             children: [
                               Container(
-                                width: double.infinity,
-                                height: 100,
-                                decoration: BoxDecoration(
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Image.asset(
-                                  "assets/test_img.png",
-                                  fit: BoxFit.contain,
-                                ),
-                              ),
+                                  width: double.infinity,
+                                  height: 100,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.circular(12),
+                                  ),
+                                  child: Image.network(
+                                    product[index - 1].imageUrl.toString(),
+                                    fit: BoxFit.contain,
+                                    errorBuilder: (context, error, stackTrace) {
+                                      return Image.asset(
+                                        "assets/test_img.png",
+                                        fit: BoxFit.contain,
+                                      );
+                                    },
+                                  )),
                               const SizedBox(height: 6),
                               Text(
-                                widget.product[index - 1].name,
+                                product[index - 1].name,
                                 style: const TextStyle(
                                   fontSize: 15,
                                   fontWeight: FontWeight.w800,
@@ -136,7 +134,7 @@ class _SuggestionSectionState extends State<SuggestionSection> {
                                 children: [
                                   Expanded(
                                     child: Text(
-                                      widget.product[index - 1].brand,
+                                      product[index - 1].brand,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextThemes.desc
                                           .copyWith(color: AppColors.darkGrey),
@@ -144,39 +142,17 @@ class _SuggestionSectionState extends State<SuggestionSection> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      bool isFav = widget.favProduct.any(
-                                          (fav) =>
-                                              fav.id ==
-                                              widget.product[index - 1].id);
+                                      bool isFav = favProduct.any((fav) =>
+                                          fav == product[index - 1].id);
                                       context.read<HomeBloc>().add(
                                             ToggleFavoriteEvent(
                                               isFavorite: isFav,
-                                              productFav: FavoriteProductEntity(
-                                                  brand: widget
-                                                      .product[index - 1].brand,
-                                                  id: widget
-                                                      .product[index - 1].id,
-                                                  image_url: widget
-                                                      .product[index - 1]
-                                                      .imageUrl,
-                                                  max_price: widget
-                                                      .product[index - 1]
-                                                      .price
-                                                      .max,
-                                                  min_price: widget
-                                                      .product[index - 1]
-                                                      .price
-                                                      .min,
-                                                  name: widget
-                                                      .product[index - 1].name,
-                                                  view: widget
-                                                      .product[index - 1]
-                                                      .rating),
+                                              productId: product[index - 1].id,
                                             ),
                                           );
                                     },
-                                    child: Icon(getFavIcon(
-                                        widget.product[index - 1].id)),
+                                    child:
+                                        Icon(getFavIcon(product[index - 1].id)),
                                   )
                                 ],
                               ),

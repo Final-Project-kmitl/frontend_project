@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:project/core/constants/api_url.dart';
 import 'package:project/core/constants/share_pref.dart';
 import 'package:project/core/network/dio_client.dart';
@@ -7,6 +8,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class ProductDatasource {
   Future<ProductModel> fetchProduct(int productId);
+  Future<void> removeFavorite(int productId);
+  Future<void> addFavorite(int productId);
+  Future<void> addRoutine(int productId);
 }
 
 class apiServiceProduct implements ProductDatasource {
@@ -14,21 +18,109 @@ class apiServiceProduct implements ProductDatasource {
   final dio = sl<DioClient>();
   @override
   Future<ProductModel> fetchProduct(int productId) async {
-    final url = Uri.parse("${AppUrl.product_detail}/${productId}");
+    if (userId == null) {
+      throw Exception("User ID not found in SharedPreferences");
+    }
 
     try {
-      final res =
-          await dio.get(url.toString(), queryParameters: {"userId": userId});
+      // 🔹 ดึงข้อมูลสินค้า
+      final productRes = await dio.get(
+        "${AppUrl.product_detail}/$productId",
+      );
 
-      if (res.statusCode == 200) {
-        final jsonData = res.data;
+      if (productRes.statusCode != 200) {
+        throw Exception("Failed to fetch product details");
+      }
 
-        return ProductModel.fromJson(jsonData);
-      } else {
-        throw Exception("Can't get product detail");
+      // ✅ ตรวจสอบว่าข้อมูลสินค้าเป็น Map
+      if (productRes.data is! Map<String, dynamic>) {
+        throw Exception("Invalid product data format");
+      }
+
+      final productData = productRes.data as Map<String, dynamic>;
+
+      // 🔹 ดึงรายการสินค้าที่ Favorite
+      final favoriteRes = await dio.get(AppUrl.getFavoriteProduct);
+
+      if (favoriteRes.statusCode != 200) {
+        throw Exception("Failed to fetch favorite products");
+      }
+
+      // ✅ ตรวจสอบว่า favoriteRes เป็น List
+      if (favoriteRes.data is! List<dynamic>) {
+        throw Exception("Invalid favorite data format");
+      }
+
+      final favoriteList = List<Map<String, dynamic>>.from(favoriteRes.data);
+
+      // 🔹 เช็คว่าสินค้านี้อยู่ใน Favorite หรือไม่
+      final bool isFavorite = favoriteList.any((fav) => fav['id'] == productId);
+
+      bool _isRoutine = false;
+      int _routineCount = 0;
+
+      try {
+        final routineRes = await dio.get("${AppUrl.baseUrl}/routine/${userId}");
+
+        final routineList = List<Map<String, dynamic>>.from(routineRes.data);
+
+        _isRoutine = routineList.any((routine) => routine["id"] == productId);
+
+        _routineCount = routineList.length;
+      } catch (e) {
+        if (e is DioException && e.response?.statusCode == 404) {
+          _isRoutine = false;
+          _routineCount = 0;
+        } else {
+          throw Exception("Routine ERror : $e");
+        }
+      }
+
+      return ProductModel.fromJson(productData).copyWith(
+          isFav: isFavorite,
+          isRoutine: _isRoutine,
+          routineCount: _routineCount);
+    } catch (e) {
+      throw Exception("Server error : ${e.toString()}");
+    }
+  }
+
+  @override
+  Future<void> addFavorite(int productId) async {
+    try {
+      final res = await dio.post(AppUrl.favorite_delete_add,
+          data: {"userId": userId, "productId": productId});
+      print("res : ${res}");
+      if (res.statusCode != 201) {
+        throw Exception("Can't favorite product");
       }
     } catch (e) {
       throw Exception("Server error : ${e.toString()}");
+    }
+  }
+
+  @override
+  Future<void> removeFavorite(int productId) async {
+    try {
+      final res = await dio.delete(AppUrl.favorite_delete_add,
+          data: {"userId": userId, "productId": productId});
+
+      print("res : ${res}");
+
+      if (res.statusCode != 200) {
+        throw Exception("Can't unfavorite product");
+      }
+    } catch (e) {
+      throw Exception("Server error : ${e.toString()}");
+    }
+  }
+
+  @override
+  Future<void> addRoutine(int productId) async {
+    try {
+      print(productId);
+    } catch (e) {
+      throw Exception(e.toString());
     }
   }
 }

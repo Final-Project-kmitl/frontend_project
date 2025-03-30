@@ -3,15 +3,19 @@ import 'package:project/core/common/helper/navigation/app_navigation.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
 import 'package:project/features/routine/presentation/pages/routine_delete_page.dart';
+import 'package:project/features/routine/presentation/pages/search_product_page.dart';
 
 class RoutineAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   final Size preferredSize;
 
+  final bool isRoutineFull;
+
   final bool isEmpty;
 
   RoutineAppBar({
     Key? key,
+    required this.isRoutineFull,
     required this.isEmpty,
   })  : preferredSize = const Size.fromHeight(kToolbarHeight), // ✅ กำหนดขนาด
         super(key: key);
@@ -20,7 +24,9 @@ class RoutineAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       elevation: 0,
+      shadowColor: Colors.transparent,
       backgroundColor: AppColors.white,
+      surfaceTintColor: Colors.white,
       actions: [
         Row(
           children: [
@@ -37,7 +43,9 @@ class RoutineAppBar extends StatelessWidget implements PreferredSizeWidget {
                     },
             ),
             IconButton(
-              onPressed: () {},
+              onPressed: () {
+                AppNavigator.push(context, SearchProductPage());
+              },
               icon: const Icon(
                 Icons.add_circle_outline,
                 size: 24,

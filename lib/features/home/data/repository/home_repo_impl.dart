@@ -1,4 +1,5 @@
 import 'package:project/features/home/data/datasource/home_datasource.dart';
+import 'package:project/features/home/domain/entities/filter_entity.dart';
 import 'package:project/features/home/domain/entities/product_entity.dart';
 import 'package:project/features/home/domain/repository/home_repo.dart';
 
@@ -22,7 +23,7 @@ class HomeRepoImpl implements HomeRepo {
   }
 
   @override
-  Future<List<FavoriteProductEntity>> favorite() async {
+  Future<List<int>> favorite() async {
     return await homeRemoteDatasource.fetchFavProduct();
   }
 
@@ -34,5 +35,16 @@ class HomeRepoImpl implements HomeRepo {
   @override
   Future<String> removeFavorite(int productId) async {
     return await homeRemoteDatasource.removeFavorite(productId);
+  }
+
+  @override
+  Future<MergeReturnFilterByBenefitEntity> getProductByBenefit(
+      int benefitId) async {
+    return await homeRemoteDatasource.fetchByBenefitId(benefitId);
+  }
+
+  @override
+  Future<List<ProductEntity>> getMoreProduct(int benefitId, int page) async {
+    return await homeRemoteDatasource.fetchMoreProduct(benefitId, page);
   }
 }

@@ -1,4 +1,33 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:project/features/home/domain/entities/product_entity.dart';
+
+class ProductRecommendModel extends ProductRecommendEntity {
+  ProductRecommendModel({required super.items, required super.pagination});
+
+  factory ProductRecommendModel.fromJson(Map<String, dynamic> json) {
+    return ProductRecommendModel(
+        items: (json['items'] as List)
+            .map((item) => ProductModel.fromJson(item))
+            .toList(),
+        pagination: PaginationModel.fromJson(json['pagination']));
+  }
+}
+
+class PaginationModel extends PaginationEntity {
+  PaginationModel(
+      {required super.totalItems,
+      required super.itemsPerPage,
+      required super.currentPage,
+      required super.totalPages});
+
+  factory PaginationModel.fromJson(Map<String, dynamic> json) {
+    return PaginationModel(
+        totalItems: json['totalItems'],
+        itemsPerPage: int.tryParse(json['totalItems'] ?? "0") ?? 0,
+        currentPage: int.tryParse(json['currentPage'] ?? "0") ?? 0,
+        totalPages: json['totalPages']);
+  }
+}
 
 class ProductModel extends ProductEntity {
   ProductModel({
@@ -24,7 +53,7 @@ class ProductModel extends ProductEntity {
       name: json['name'],
       rating: json['rating'].toString(),
       price: PriceEntity.fromJson(json['price']),
-      imageUrl: json['image_url'],
+      imageUrl: json['image_url'] ?? '',
     );
   }
 
@@ -54,7 +83,7 @@ class FavoriteProductModel extends FavoriteProductEntity {
     return FavoriteProductModel(
         brand: json['brand'],
         id: json['id'],
-        image_url: json['image_url'],
+        image_url: json['image_url'] ?? "",
         max_price: json['max_price'],
         min_price: json['min_price'],
         name: json['name'],

@@ -9,13 +9,13 @@ class ShowRating extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Color _containerColor() {
-      var ratingInInt = double.parse(rating).toInt();
+      var ratingInInt = double.parse(rating);
 
-      if (ratingInInt > 70) {
+      if (ratingInInt > 75) {
         return AppColors.quality_good_match;
-      } else if (ratingInInt > 35) {
+      } else if (ratingInInt > 50) {
         return AppColors.quality_medium_match;
-      } else if (ratingInInt > 0) {
+      } else if (ratingInInt > 25) {
         return AppColors.quality_poor_match;
       }
       return AppColors.quality_not_math;

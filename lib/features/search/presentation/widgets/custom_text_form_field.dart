@@ -6,12 +6,16 @@ class CustomTextFormField extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final void Function(String) fn;
+  final void Function(String) onChange;
   final FocusNode? focusNode;
+  final Function() ondelete;
   const CustomTextFormField(
       {super.key,
       required this.controller,
       required this.hintText,
       required this.fn,
+      required this.ondelete,
+      required this.onChange,
       this.focusNode});
 
   @override
@@ -44,10 +48,18 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
       onFieldSubmitted: (value) {
         widget.fn(value);
       },
+      onChanged: (value) {
+        print(value);
+        if (value.isNotEmpty) {
+          widget.onChange(value);
+        }
+      },
       focusNode: widget.focusNode,
       cursorWidth: 1,
       controller: widget.controller,
-      onTapOutside: (event) {},
+      onTapOutside: (event) {
+        widget.focusNode?.unfocus();
+      },
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.symmetric(vertical: 8),
         prefixIcon: const Padding(
@@ -64,7 +76,10 @@ class _CustomTextFormFieldState extends State<CustomTextFormField> {
         suffixIconConstraints: const BoxConstraints(minWidth: 0, minHeight: 0),
         suffixIcon: widget.controller.text.isNotEmpty
             ? GestureDetector(
-                onTap: () => widget.controller.clear(),
+                onTap: () {
+                  widget.controller.clear();
+                  widget.ondelete();
+                },
                 child: const Padding(
                   padding: EdgeInsets.only(right: 12),
                   child: Icon(Icons.clear),

@@ -9,6 +9,7 @@ class AllMatch extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
+      margin: EdgeInsets.only(bottom: 52),
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
           color: AppColors.bg_score_card_green,
@@ -26,7 +27,7 @@ class AllMatch extends StatelessWidget {
           Text(
             "ไม่พบส่วนผสมที่ไม่ควรใช้ร่วมกันในรูทีนของคุณ",
             style: TextThemes.desc,
-          )
+          ),
         ],
       ),
     );

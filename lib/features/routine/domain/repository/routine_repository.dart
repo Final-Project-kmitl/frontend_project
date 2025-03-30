@@ -6,5 +6,11 @@ abstract class RoutineRepository {
 
   Future<List<NoMatchEntity>> getNoMatchRoutine();
 
-  Future<void> deleteProduct(List<int>? productId);
+  Future<void> deleteProduct(Set<int> productId);
+
+  Future<Map<String, dynamic>> getQuery(String query);
+
+  Future<List<ProductEntity>> getMoreQuery(String query, int page);
+
+  Future<void> addRoutine(int productId);
 }

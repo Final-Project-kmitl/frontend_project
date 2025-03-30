@@ -4,7 +4,7 @@ class FavProductEntities {
   final String brand;
   final String minPrice;
   final String maxPrice;
-  final String img;
+  final String? img;
   final String rating;
 
   const FavProductEntities({
@@ -13,7 +13,7 @@ class FavProductEntities {
     required this.brand,
     required this.minPrice,
     required this.maxPrice,
-    required this.img,
+     this.img,
     required this.rating,
   });
 }

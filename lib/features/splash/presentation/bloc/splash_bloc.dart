@@ -18,15 +18,11 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
       CheckUserEvent event, Emitter<SplashState> emit) async {
     emit(SplashLoading());
 
-    await Future.delayed(Duration(seconds: 2));
-
     final Either<Failure, bool> result = await sl<CheckUser>().call();
 
-    return result.fold(
+    result.fold(
       (failure) => emit(SplashFailure(failure.message)),
-      (userExit) => emit(
-        SplashSuccess(),
-      ),
+      (userExit) => emit(SplashSuccess()),
     );
   }
 }

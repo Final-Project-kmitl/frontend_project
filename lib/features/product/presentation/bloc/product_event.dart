@@ -7,6 +7,13 @@ sealed class ProductEvent extends Equatable {
   List<Object> get props => [];
 }
 
+class AddProductToRoutineEvent extends ProductEvent {
+  final int productId;
+
+  AddProductToRoutineEvent({required this.productId});
+}
+
+
 class ProductDetailRequestedEvent extends ProductEvent {
   final int productId;
 
@@ -14,4 +21,13 @@ class ProductDetailRequestedEvent extends ProductEvent {
 
   @override
   List<Object> get props => [productId];
+}
+
+class ToggleFavoriteEvent extends ProductEvent {
+  final int productId;
+  final bool isFavorite;
+  ToggleFavoriteEvent({required this.productId, required this.isFavorite});
+
+  @override
+  List<Object> get props => [productId, isFavorite];
 }

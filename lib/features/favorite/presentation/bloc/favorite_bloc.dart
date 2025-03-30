@@ -5,6 +5,7 @@ import 'package:project/features/favorite/domain/entities/fav_product.dart';
 import 'package:project/features/favorite/domain/repository/fav_repository.dart';
 import 'package:project/features/favorite/domain/usecase/get_favorite.dart';
 import 'package:project/features/favorite/domain/usecase/un_fav_favorite.dart';
+import 'package:project/features/home/presentation/bloc/home_bloc.dart';
 
 part 'favorite_event.dart';
 part 'favorite_state.dart';
@@ -12,10 +13,12 @@ part 'favorite_state.dart';
 class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
   final GetFavorite getFavorite;
   final UnFavFavorite unFavFavorite;
+  final HomeBloc homeBloc;
 
   FavoriteBloc({
     required this.getFavorite,
     required this.unFavFavorite,
+    required this.homeBloc,
   }) : super(FavoriteInitial()) {
     on<LoadFavoritesEvent>(_onLoadFavorites);
     on<ToggleFavoriteEvent>(_onToggleFavorite);
@@ -76,6 +79,10 @@ class FavoriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
       return;
     }
 
+    unfavList.forEach((e) {
+      print(e);
+      homeBloc.add(UpdateUIEvent(isFavorite: false, productId: e));
+    });
     print("✅ กำลังส่ง Unfavorite: $unfavList");
     try {
       await unFavFavorite(unfavList);

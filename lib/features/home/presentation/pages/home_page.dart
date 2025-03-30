@@ -218,51 +218,104 @@ class _HomePageState extends State<HomePage> {
                       SliverToBoxAdapter(
                         child: CategorySection(),
                       ),
+                      // Recommended Section
                       BlocBuilder<HomeBloc, HomeState>(
-                        builder: (context, state) {
-                          if (state is HomeLoaded) {
-                            // ✅ เช็คว่าข้อมูลทั้งหมดโหลดเสร็จแล้ว
-                            if (state.isRecommendedLoaded) {
-                              print("REC TRUE");
-                              return SliverToBoxAdapter(
-                                child: _buildSection(
-                                    title: "แนะนำสำหรับคุณ",
-                                    isLoad: state.isRecommendedLoaded,
-                                    data: state.recommended,
-                                    fav: state.favorite),
-                              );
-                            }
-                            print("REC FALSE");
-                            // if (state.isRecommendedLoaded &&
-                            //     state.isPopularLoaded &&
-                            //     state.isRecentLoaded) {
-                            //   return SliverList(
-                            //     delegate: SliverChildListDelegate([
-                            //       _buildSection(
-                            //           title: "แนะนำสำหรับคุณ",
-                            //           isLoad: state.isRecommendedLoaded,
-                            //           data: state.recommended,
-                            //           fav: state.favorite),
-                            //       _buildSection(
-                            //           title: "สินค้ายอดนิยม",
-                            //           isLoad: state.isPopularLoaded,
-                            //           data: state.popular,
-                            //           fav: state.favorite),
-                            //       _buildSection(
-                            //           title: "สินค้าที่ดูล่าสุด",
-                            //           isLoad: state.isRecentLoaded,
-                            //           data: state.recent,
-                            //           fav: state.favorite),
-                            //     ]),
-                            //   );
-                            // }
+                        buildWhen: (previous, current) {
+                          // Rebuild only when recommended data changes
+                          if (current is HomeLoaded) {
+                            return current.isRecommendedLoaded !=
+                                (previous is HomeLoaded
+                                    ? previous.isRecommendedLoaded
+                                    : false);
                           }
-                          // ✅ ถ้ายังโหลดไม่เสร็จให้แสดง Loading
+                          return false;
+                        },
+                        builder: (context, state) {
+                          print("Building Recommended Section. State: $state");
+                          if (state is HomeLoaded &&
+                              state.isRecommendedLoaded) {
+                            print("REC TRUE - Building Recommended Section");
+                            return SliverToBoxAdapter(
+                              child: _buildSection(
+                                title: "แนะนำสำหรับคุณ",
+                                isLoad: true,
+                                data: state.recommended,
+                                fav: state.favorite,
+                              ),
+                            );
+                          }
+                          print(
+                              "REC FALSE - Loading or empty recommended data");
                           return SliverToBoxAdapter(
-                            child: Center(child: CircularProgressIndicator()),
+                            child: SuggestionLoading(title: "แนะนำสำหรับคุณ"),
                           );
                         },
                       ),
+                      // Popular Section
+                      BlocBuilder<HomeBloc, HomeState>(
+                        buildWhen: (previous, current) {
+                          // Rebuild only when popular data changes
+                          if (current is HomeLoaded) {
+                            return current.isPopularLoaded !=
+                                (previous is HomeLoaded
+                                    ? previous.isPopularLoaded
+                                    : false);
+                          }
+                          return false;
+                        },
+                        builder: (context, state) {
+                          print("Building Popular Section. State: $state");
+                          if (state is HomeLoaded && state.isPopularLoaded) {
+                            print("POPULAR TRUE - Building Popular Section");
+                            return SliverToBoxAdapter(
+                              child: _buildSection(
+                                title: "สินค้ายอดนิยม",
+                                isLoad: true,
+                                data: state.popular,
+                                fav: state.favorite,
+                              ),
+                            );
+                          }
+                          print(
+                              "POPULAR FALSE - Loading or empty popular data");
+                          return SliverToBoxAdapter(
+                            child: SuggestionLoading(title: "สินค้ายอดนิยม"),
+                          );
+                        },
+                      ),
+                      // Recent Section
+                      BlocBuilder<HomeBloc, HomeState>(
+                        buildWhen: (previous, current) {
+                          // Rebuild only when recent data changes
+                          if (current is HomeLoaded) {
+                            return current.isRecentLoaded !=
+                                (previous is HomeLoaded
+                                    ? previous.isRecentLoaded
+                                    : false);
+                          }
+                          return false;
+                        },
+                        builder: (context, state) {
+                          print("Building Recent Section. State: $state");
+                          if (state is HomeLoaded && state.isRecentLoaded) {
+                            print("RECENT TRUE - Building Recent Section");
+                            return SliverToBoxAdapter(
+                              child: _buildSection(
+                                title: "สินค้าที่ดูล่าสุด",
+                                isLoad: true,
+                                data: state.recent,
+                                fav: state.favorite,
+                              ),
+                            );
+                          }
+                          print("RECENT FALSE - Loading or empty recent data");
+                          return SliverToBoxAdapter(
+                            child:
+                                SuggestionLoading(title: "สินค้าที่ดูล่าสุด"),
+                          );
+                        },
+                      ),
+
                       SliverToBoxAdapter(
                         child: SizedBox(
                           height: _bottomsize + 82,

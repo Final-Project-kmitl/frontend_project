@@ -78,7 +78,7 @@ class apiServiceHome implements HomeRemoteDatasource {
 
     try {
       final res = await dio
-          .get(url.toString(), queryParameters: {"limit": 1, "page": 1});
+          .get(url.toString(), queryParameters: {"limit": 20, "page": 1});
 
       if (res.statusCode == 200) {
         final jsonData = res.data;

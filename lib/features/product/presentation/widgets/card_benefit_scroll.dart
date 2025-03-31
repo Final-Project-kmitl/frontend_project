@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:project/core/config/assets/svg_assets.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
 import 'package:project/features/product/domain/entities/product_entity.dart';
@@ -88,10 +89,14 @@ class CardBenefitScroll extends StatelessWidget {
                     Spacer(),
                     Row(
                       children: [
-                        SvgPicture.asset(
-                          "assets/icon_pin.svg",
+                        Icon(
+                          Icons.warning,
                           color: AppColors.red,
                         ),
+                        // SvgPicture.asset(
+                        //   "assets/icon_pin.svg",
+                        //   color: AppColors.red,
+                        // ),
                         SizedBox(
                           width: 6,
                         ),
@@ -137,7 +142,7 @@ class CardBenefitScroll extends StatelessWidget {
                     Row(
                       children: [
                         SvgPicture.asset(
-                          "assets/icon_pin.svg",
+                          SvgAssets.product_hand,
                           color: AppColors.quality_poor_match,
                         ),
                         SizedBox(
@@ -185,7 +190,7 @@ class CardBenefitScroll extends StatelessWidget {
                     Row(
                       children: [
                         SvgPicture.asset(
-                          "assets/icon_pin.svg",
+                          SvgAssets.product_good,
                           color: AppColors.quality_good_match,
                         ),
                         SizedBox(

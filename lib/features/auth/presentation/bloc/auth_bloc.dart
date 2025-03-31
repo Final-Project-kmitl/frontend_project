@@ -42,6 +42,8 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     try {
       emit(AuthLoading());
 
+      await Future.delayed(Duration(seconds: 3));
+
       await register.call(event.userId, event.skinType, event.allergicListId,
           event.benefitListId);
 

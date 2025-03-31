@@ -39,6 +39,7 @@ class apiServiceAuth implements AuthApiService {
   @override
   Future<void> fetchUser(int userId, String skinType, List<int>? allergicListId,
       List<int> benefitListId) async {
+    print(userId);
     final url = Uri.parse(AppUrl.user);
     int? skinId;
 
@@ -60,23 +61,21 @@ class apiServiceAuth implements AuthApiService {
         skinId = null; // ❌ ไม่ต้องส่งค่า
         break;
     }
+    print(skinId);
 
-  //จัดการ body เพื่อให้่้สำหรับการส่งข้อมูลไป backend
-    final Map<String, dynamic> body = {
-      "userId": userId,
-      if (skinId != null)
-        "skinTypeId": skinId, // ✅ ถ้า skinId เป็น null จะไม่ถูกเพิ่ม
-      "skinProblemIds": benefitListId ?? [], // ป้องกัน null
-      "ingredientIds": allergicListId ?? [],
-    };
     try {
-      final res = await dio.post(url.toString(), data: body);
+      final registerRes = await dio.post("${AppUrl.register}",
+          data: {"userId": userId, "skinTypeId": skinId});
 
-      if (res.statusCode == 201) {
-        sl<SharedPreferences>()
-            .setString(shared_pref.userId, userId.toString());
-      }
+      final allergic = await dio.post("${AppUrl.profile_ingredient}",
+          data: {"userId": userId, "ingredientIds": allergicListId});
 
+      final skinPro = await dio.post("${AppUrl.profile_skin_problem}",
+          data: {"userId": userId, "skinProblemIds": benefitListId});
+
+      // final res = await dio.post(url.toString(), data: body);
+
+      sl<SharedPreferences>().setString(shared_pref.userId, userId.toString());
     } catch (e) {
       throw Exception("");
     }

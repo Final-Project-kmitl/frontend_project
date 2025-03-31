@@ -30,7 +30,8 @@ class CameraBloc extends Bloc<CameraEvent, CameraPhotoState> {
       emit(PhotoLoaded(res: res));
     } catch (e) {
       print("E");
-      PhotoError(res: e.toString());
+
+      emit(PhotoError(res: e.toString()));
     }
   }
 
@@ -44,7 +45,7 @@ class CameraBloc extends Bloc<CameraEvent, CameraPhotoState> {
       emit(BarcodeLoaded(productId: productId));
     } catch (e) {
       print("ERR : $e");
-      BarcodeError(message: e.toString());
+      emit(BarcodeError(message: "ไม่พบสินค้า"));
     }
   }
 }

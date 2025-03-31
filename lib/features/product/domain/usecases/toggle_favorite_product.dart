@@ -7,7 +7,7 @@ class ToggleFavoriteProduct {
   Future<void> call(int productId, bool isFav) async {
     print("ISFAV : ${isFav}");
     try {
-      if (!isFav) {
+      if (isFav) {
         await productDetailRepository.removeFavoriteProduct(productId);
       } else {
         await productDetailRepository.addFavoriteProduct(productId);

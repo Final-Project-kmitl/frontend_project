@@ -22,10 +22,10 @@ class SuggestionSection extends StatelessWidget {
   //สร้าง set ของ fav easy to check
   @override
   Widget build(BuildContext context) {
-    IconData getFavIcon(int productId) {
-      bool isFav = favProduct.any((fav) => fav == productId);
-      return isFav ? Icons.favorite : Icons.favorite_border;
-    }
+    // IconData getFavIcon(int productId) {
+    //   bool isFav = favProduct.any((fav) => fav == productId);
+    //   return isFav ? Icons.favorite : Icons.favorite_border;
+    // }
 
     return Column(
       children: [
@@ -140,20 +140,20 @@ class SuggestionSection extends StatelessWidget {
                                           .copyWith(color: AppColors.darkGrey),
                                     ),
                                   ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      bool isFav = favProduct.any((fav) =>
-                                          fav == product[index - 1].id);
-                                      context.read<HomeBloc>().add(
-                                            ToggleFavoriteEvent(
-                                              isFavorite: isFav,
-                                              productId: product[index - 1].id,
-                                            ),
-                                          );
-                                    },
-                                    child:
-                                        Icon(getFavIcon(product[index - 1].id)),
-                                  )
+                                  //     GestureDetector(
+                                  //       onTap: () {
+                                  //         bool isFav = favProduct.any((fav) =>
+                                  //             fav == product[index - 1].id);
+                                  //         context.read<HomeBloc>().add(
+                                  //               ToggleFavoriteEvent(
+                                  //                 isFavorite: isFav,
+                                  //                 productId: product[index - 1].id,
+                                  //               ),
+                                  //             );
+                                  //       },
+                                  //       child:
+                                  //           Icon(getFavIcon(product[index - 1].id)),
+                                  //     )
                                 ],
                               ),
                             ],

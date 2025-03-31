@@ -1,5 +1,22 @@
 import 'package:project/features/product/domain/entities/product_entity.dart';
 
+class ProductRelateModel extends ProductRelateEntity {
+  ProductRelateModel(
+      {required super.id,
+      required super.brand,
+      required super.name,
+      required super.image_url});
+
+  factory ProductRelateModel.fromJson(Map<String, dynamic> json) {
+    return ProductRelateModel(
+      id: json['id'],
+      brand: json['brand'],
+      name: json['name'],
+      image_url: json['image_url'] ?? "",
+    );
+  }
+}
+
 class ProductModel extends ProductEntity {
   ProductModel({
     required super.id,
@@ -19,37 +36,39 @@ class ProductModel extends ProductEntity {
     required super.isFav,
     required super.isRoutine,
     required super.routineCount,
+    required super.productRelate,
   });
 
   factory ProductModel.fromJson(Map<String, dynamic> json) {
     return ProductModel(
-      id: json['id'],
-      name: json['name'],
-      brand: json['brand'],
-      rating: double.parse(json['rating']),
-      price: PriceModel.fromJson(json['price']),
-      imageUrl: json['image_url'] ?? "",
-      skinTypes: (json['skinTypes'] as List)
-          .map((e) => SkinTypeModel.fromJson(e))
-          .toList(),
-      productTypes: (json['productTypes'] as List)
-          .map((e) => ProductTypeModel.fromJson(e))
-          .toList(),
-      benefits: List<String>.from(json['benefits']),
-      concerns: List<String>.from(json['concerns']),
-      ingredients: (json['ingredients'] as List)
-          .map((e) => IngredientModel.fromJson(e))
-          .toList(),
-      view: json['view'],
-      productBenefits: (json['product_benefits'] as List)
-          .map((productBenefit) => ProductBenefitModel.fromJson(productBenefit))
-          .toList(),
-      userSpecificInfo:
-          UserSpecificInfoModel.fromJson(json['userSpecificInfo']),
-      isFav: json['isFav'] ?? false,
-      isRoutine: json['isRoutine'] ?? true,
-      routineCount: json['routineCount'] ?? 0,
-    );
+        id: json['id'],
+        name: json['name'],
+        brand: json['brand'],
+        rating: double.parse(json['rating']),
+        price: PriceModel.fromJson(json['price']),
+        imageUrl: json['image_url'] ?? "",
+        skinTypes: (json['skinTypes'] as List)
+            .map((e) => SkinTypeModel.fromJson(e))
+            .toList(),
+        productTypes: (json['productTypes'] as List)
+            .map((e) => ProductTypeModel.fromJson(e))
+            .toList(),
+        benefits: List<String>.from(json['benefits']),
+        concerns: List<String>.from(json['concerns']),
+        ingredients: (json['ingredients'] as List)
+            .map((e) => IngredientModel.fromJson(e))
+            .toList(),
+        view: json['view'],
+        productBenefits: (json['product_benefits'] as List)
+            .map((productBenefit) =>
+                ProductBenefitModel.fromJson(productBenefit))
+            .toList(),
+        userSpecificInfo:
+            UserSpecificInfoModel.fromJson(json['userSpecificInfo']),
+        isFav: json['isFav'] ?? false,
+        isRoutine: json['isRoutine'] ?? true,
+        routineCount: json['routineCount'] ?? 0,
+        productRelate: []);
   }
 
   Map<String, dynamic> toJson() {
@@ -79,6 +98,7 @@ class ProductModel extends ProductEntity {
     bool? isFav,
     bool? isRoutine,
     int? routineCount,
+    List<ProductRelateEntity>? product,
   }) {
     return ProductModel(
       id: id,
@@ -98,6 +118,7 @@ class ProductModel extends ProductEntity {
       isFav: isFav ?? this.isFav,
       isRoutine: isRoutine ?? this.isRoutine,
       routineCount: routineCount ?? this.routineCount,
+      productRelate: product!,
     );
   }
 }

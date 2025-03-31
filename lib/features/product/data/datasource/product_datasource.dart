@@ -51,6 +51,13 @@ class apiServiceProduct implements ProductDatasource {
         throw Exception("Invalid favorite data format");
       }
 
+      final resProductRelate =
+          await dio.get("${AppUrl.product_relate}/${productId}");
+
+      final productRelate = (resProductRelate.data['items'] as List)
+          .map((e) => ProductRelateModel.fromJson(e))
+          .toList();
+
       final favoriteList = List<Map<String, dynamic>>.from(favoriteRes.data);
 
       // 🔹 เช็คว่าสินค้านี้อยู่ใน Favorite หรือไม่
@@ -76,10 +83,13 @@ class apiServiceProduct implements ProductDatasource {
         }
       }
 
+      print("RELATE   :   ${productRelate}");
+
       return ProductModel.fromJson(productData).copyWith(
           isFav: isFavorite,
           isRoutine: _isRoutine,
-          routineCount: _routineCount);
+          routineCount: _routineCount,
+          product: productRelate);
     } catch (e) {
       throw Exception("Server error : ${e.toString()}");
     }
@@ -87,25 +97,29 @@ class apiServiceProduct implements ProductDatasource {
 
   @override
   Future<void> addFavorite(int productId) async {
+    print("ADD");
     try {
+      // Check if userId is null
+      if (userId == null) {
+        throw Exception("User ID is not available");
+      }
+
       final res = await dio.post(AppUrl.favorite_delete_add,
           data: {"userId": userId, "productId": productId});
-      print("res : ${res}");
-      if (res.statusCode != 201) {
-        throw Exception("Can't favorite product");
-      }
+
+      print(res.statusCode);
     } catch (e) {
-      throw Exception("Server error : ${e.toString()}");
+      print("❌ Failed to update favorite: ${e}");
+      throw Exception("Server error: ${e.toString()}");
     }
   }
 
   @override
   Future<void> removeFavorite(int productId) async {
+    print("REMOVE");
     try {
       final res = await dio.delete(AppUrl.favorite_delete_add,
           data: {"userId": userId, "productId": productId});
-
-      print("res : ${res}");
 
       if (res.statusCode != 200) {
         throw Exception("Can't unfavorite product");
@@ -118,7 +132,9 @@ class apiServiceProduct implements ProductDatasource {
   @override
   Future<void> addRoutine(int productId) async {
     try {
-      print(productId);
+      final res =
+          await dio.post("${AppUrl.routine_check_product}/$userId/$productId");
+      print(res);
     } catch (e) {
       throw Exception(e.toString());
     }

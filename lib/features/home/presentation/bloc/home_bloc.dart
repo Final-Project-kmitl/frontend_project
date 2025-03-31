@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:path/path.dart';
 import 'package:project/features/home/domain/entities/filter_entity.dart';
 import 'package:project/features/home/domain/entities/product_entity.dart';
 import 'package:project/features/home/domain/usecases/add_favorite.dart';
@@ -39,24 +40,62 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     required this.getBenefit,
   }) : super(HomeLoading()) {
     on<ToggleFavoriteEvent>(_onToggleFavorite);
-    on<LoadRecommendedEvent>(_onLoadRecommended);
-    on<LoadPopularEvent>(_onLoadPopular);
-    on<LoadRecentEvent>(_onLoadRecent);
-    on<LoadFavoriteEvent>(_onLoadFavorite);
+    // on<LoadRecommendedEvent>(_onLoadRecommended);
+    // on<LoadPopularEvent>(_onLoadPopular);
+    // on<LoadRecentEvent>(_onLoadRecent);
+    // on<LoadFavoriteEvent>(_onLoadFavorite);
     on<LoadByBenefitEvent>(_onByBenefit);
     on<RestoreHomeEvent>(_onRestoreHome);
     on<LoadMoreByBenefitEvent>(_onLoadMoreBenefit);
     on<UpdateUIEvent>(_onUpdateUI);
+    on<HomeDataRequestedEvent>(_homeDataLoad);
+  }
+
+  Future<void> _homeDataLoad(
+      HomeDataRequestedEvent event, Emitter<HomeState> emit) async {
+    emit(HomeLoading());
+    try {
+      final recent = await getRecent();
+      final reccom = await getRecomend();
+      final pop = await getPopular();
+      final fav = await getFavorite();
+
+      print("NEWWWWW : ${recent} ${reccom} ${pop} ${fav}");
+
+      emit(HomeLoaded(
+          recommended: reccom,
+          popular: pop,
+          recent: recent,
+          favorite: fav,
+          isRecommendedLoaded: true,
+          isPopularLoaded: true,
+          isRecentLoaded: true,
+          isFavoriteLoaded: true));
+      print("STATE : ${state}");
+    } catch (e) {
+      print(e);
+      HomeError(message: e.toString());
+    }
   }
 
   void _onUpdateUI(UpdateUIEvent event, Emitter<HomeState> emit) {
-    final currentState = state as HomeLoaded;
+    final currentState = state;
 
-    final favlist = List<int>.from(currentState.favorite);
+    if (currentState is HomeLoaded) {
+      List<int> updatedFavorites = List<int>.from(currentState.favorite);
 
-    favlist.removeWhere((e) => event.productId == e);
+      if (event.isFavorite) {
+        if (!updatedFavorites.contains(event.productId)) {
+          updatedFavorites.add(event.productId);
+        }
+      } else {
+        updatedFavorites.remove(event.productId);
+      }
 
-    emit(currentState.copyWith(favorite: favlist));
+      emit(currentState.copyWith(favorite: updatedFavorites));
+
+      print("🏠 Home UI Updated: Favorite list -> $updatedFavorites");
+    }
   }
 
   Future<void> _onLoadMoreBenefit(
@@ -83,66 +122,91 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     }
   }
 
-  Future<void> _onLoadRecommended(
-      LoadRecommendedEvent event, Emitter<HomeState> emit) async {
-    try {
-      final recommended = await getRecomend();
-      final currentState =
-          state is HomeLoaded ? state as HomeLoaded : HomeLoaded.empty();
+  // Future<void> _onLoadRecommended(
+  //     LoadRecommendedEvent event, Emitter<HomeState> emit) async {
+  //   try {
+  //     final recommended = await getRecomend();
+  //     final currentState =
+  //         state is HomeLoaded ? state as HomeLoaded : HomeLoaded.empty();
 
-      print("REC : $recommended");
+  //     print("REC : $recommended");
 
-      emit(currentState.copyWith(
-          recommended: recommended, isRecommendedLoaded: true));
-      print("recco : $currentState");
-    } catch (e) {
-      print("❌ Error loading recommended: $e");
-    }
-  }
+  //     print(currentState);
 
-  Future<void> _onLoadPopular(
-      LoadPopularEvent event, Emitter<HomeState> emit) async {
-    try {
-      final popular = await getPopular();
-      final currentState =
-          state is HomeLoaded ? state as HomeLoaded : HomeLoaded.empty();
+  //     print("🔎 ก่อน emit: ${currentState.recommended}");
+  //     print("🔎 กำลัง emit: $recommended");
 
-      print("POPULAR : $popular");
+  //     final newState = currentState.copyWith(
+  //       recommended: List.of(recommended),
+  //       isRecommendedLoaded: true,
+  //     );
 
-      emit(currentState.copyWith(popular: popular, isPopularLoaded: true));
-    } catch (e) {
-      print("❌ Error loading popular: $e");
-    }
-  }
+  //     print("✅ New State: $newState");
 
-  Future<void> _onLoadRecent(
-      LoadRecentEvent event, Emitter<HomeState> emit) async {
-    try {
-      final recent = await getRecent();
-      final currentState =
-          state is HomeLoaded ? state as HomeLoaded : HomeLoaded.empty();
+  //     emit(newState);
+  //     print("RECCCCCC : ${currentState.isRecommendedLoaded}");
+  //     print("RECCCCCC : ${currentState.recommended}");
+  //   } catch (e) {
+  //     print("❌ Error loading recommended: $e");
+  //   }
+  // }
 
-      print("RECENT : $recent");
+  // Future<void> _onLoadPopular(
+  //     LoadPopularEvent event, Emitter<HomeState> emit) async {
+  //   try {
+  //     final popular = await getPopular();
+  //     final currentState =
+  //         state is HomeLoaded ? state as HomeLoaded : HomeLoaded.empty();
 
-      emit(currentState.copyWith(recent: recent, isRecentLoaded: true));
-    } catch (e) {
-      print("❌ Error loading recent: $e");
-    }
-  }
+  //     print("POPULAR : $popular");
+  //     print(currentState);
 
-  Future<void> _onLoadFavorite(
-      LoadFavoriteEvent event, Emitter<HomeState> emit) async {
-    try {
-      final favorite = await getFavorite();
-      final currentState =
-          state is HomeLoaded ? state as HomeLoaded : HomeLoaded.empty();
+  //     print("🔎 ก่อน emit: ${currentState.popular}");
+  //     print("🔎 กำลัง emit: $popular");
 
-      emit(currentState.copyWith(favorite: favorite, isFavoriteLoaded: true));
-      print("fav : $currentState");
-    } catch (e) {
-      print("❌ Error loading favorite: $e");
-    }
-  }
+  //     emit(currentState.copyWith(popular: popular, isPopularLoaded: true));
+  //   } catch (e) {
+  //     print("❌ Error loading popular: $e");
+  //   }
+  // }
+
+  // Future<void> _onLoadRecent(
+  //     LoadRecentEvent event, Emitter<HomeState> emit) async {
+  //   try {
+  //     final recent = await getRecent();
+  //     final currentState =
+  //         state is HomeLoaded ? state as HomeLoaded : HomeLoaded.empty();
+
+  //     print("RECENT : $recent");
+  //     print(currentState);
+
+  //     print("🔎 ก่อน emit: ${currentState.recent}");
+  //     print("🔎 กำลัง emit: $recent");
+
+  //     emit(currentState.copyWith(recent: recent, isRecentLoaded: true));
+  //   } catch (e) {
+  //     print("❌ Error loading recent: $e");
+  //   }
+  // }
+
+  // Future<void> _onLoadFavorite(
+  //     LoadFavoriteEvent event, Emitter<HomeState> emit) async {
+  //   try {
+  //     final favorite = await getFavorite();
+  //     final currentState =
+  //         state is HomeLoaded ? state as HomeLoaded : HomeLoaded.empty();
+
+  //     print(currentState);
+
+  //     print("🔎 ก่อน emit: ${currentState.favorite}");
+  //     print("🔎 กำลัง emit: $favorite");
+
+  //     emit(currentState.copyWith(favorite: favorite, isFavoriteLoaded: true));
+  //     print("fav : $currentState");
+  //   } catch (e) {
+  //     print("❌ Error loading favorite: $e");
+  //   }
+  // }
 
   //กดย้อนหลัง
   Future<void> _onRestoreHome(
@@ -151,7 +215,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     if (_previousHomeState != null) {
       emit(_previousHomeState!); // ✅ คืนค่าเดิมกลับมา
     } else {
-      add(LoadRecommendedEvent()); // ถ้าไม่มีข้อมูลเดิม โหลดใหม่
+      add(HomeDataRequestedEvent()); // ถ้าไม่มีข้อมูลเดิม โหลดใหม่
     }
   }
 

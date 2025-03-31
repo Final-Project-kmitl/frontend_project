@@ -81,11 +81,17 @@ class _CameraDirectionState extends State<CameraDirection> {
                 content: const Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text("1.ถ่ายรูปในที่ที่มีแสงสว่างเพียงพอ"),
-                    Text("2.ถ่ายให้รายการส่วนผสมทั้งหมดอยู่ในกรอบ"),
-                    Text("3.ในรูปควรมีแสงสะท้อนน้อยที่สุด"),
                     Text(
-                        "4.หากบรรจุภัณฑ์มีความโค้ง ควรถ่ายรูปมากกว่า 1 รูปเพื่อให้เห็นส่วนผสมครบทุกตัว"),
+                      "1.ถ่ายรูปในที่ที่มีแสงสว่างเพียงพอ",
+                      style: TextThemes.body,
+                    ),
+                    Text("2.ถ่ายให้รายการส่วนผสมทั้งหมดอยู่ในกรอบ",
+                        style: TextThemes.body),
+                    Text("3.ในรูปควรมีแสงสะท้อนน้อยที่สุด",
+                        style: TextThemes.body),
+                    Text(
+                        "4.หากบรรจุภัณฑ์มีความโค้ง ควรถ่ายรูป\nมากกว่า 1 รูปเพื่อให้เห็นส่วนผสมครบทุกตัว",
+                        style: TextThemes.body),
                   ],
                 ),
               ),

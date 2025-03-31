@@ -33,7 +33,6 @@ class _ShowBenefitState extends State<ShowBenefit> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     context
         .read<HomeBloc>()
@@ -51,7 +50,6 @@ class _ShowBenefitState extends State<ShowBenefit> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     _scrollController.dispose();
     super.dispose();
   }
@@ -87,12 +85,7 @@ class _ShowBenefitState extends State<ShowBenefit> {
         centerTitle: true,
         surfaceTintColor: AppColors.white,
         backgroundColor: AppColors.white,
-        actions: [
-          Icon(Icons.tune),
-          SizedBox(
-            width: 20,
-          )
-        ],
+        // actions: [Icon(Icons.tune), SizedBox(width: 20)],
         leading: GestureDetector(
             onTap: () {
               Navigator.pop(context);
@@ -100,7 +93,7 @@ class _ShowBenefitState extends State<ShowBenefit> {
             },
             child: Icon(Icons.chevron_left_outlined)),
         title: Text(
-          "${this.widget.benefit}",
+          widget.benefit,
           style: TextThemes.headline2,
         ),
       ),
@@ -112,9 +105,7 @@ class _ShowBenefitState extends State<ShowBenefit> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(state.message),
-                  SizedBox(
-                    height: 16,
-                  ),
+                  SizedBox(height: 16),
                   ReloadButton(fn: () {
                     context
                         .read<HomeBloc>()
@@ -256,6 +247,7 @@ class _ShowBenefitState extends State<ShowBenefit> {
                       ],
                     ),
                   ),
+                  // Wrap GridView inside an Expanded widget
                   Expanded(
                     child: GridView.builder(
                       controller: _scrollController,

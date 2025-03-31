@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:path/path.dart';
 import 'package:project/core/constants/exception.dart';
 import 'package:project/features/home/presentation/bloc/home_bloc.dart';
 import 'package:project/features/product/domain/entities/product_entity.dart';
@@ -38,7 +39,7 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       await addProductRoutine(event.productId);
 
       emit(currentState.copyWith(
-          isRoutine: true, routineCoutn: newRoutineCount));
+          isRoutine: true, routineCount: newRoutineCount));
     } on SocketException {
       ProductDetailError(message: Exception_String.netwok_error);
     } on TimeoutException {
@@ -52,27 +53,32 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       ToggleFavoriteEvent event, Emitter<ProductState> emit) async {
     final currentState = state;
     if (currentState is ProductDetailLoaded) {
-      final bool newFavStatus = !currentState.isFav;
+      final bool newFavStatus = currentState.isFav;
+
+      print("NEW FAV $newFavStatus");
 
       try {
         await toggleFavoriteProduct(event.productId, newFavStatus);
 
-        final updatedProduct =
-            currentState.product.copyWith(isFav: newFavStatus);
+        // final updatedProduct =
+        // currentState.product.copyWith(isFav: newFavStatus);
 
         emit(ProductDetailLoaded(
-          product: updatedProduct,
-          isFav: newFavStatus,
-          isRoutine: currentState.isRoutine,
-          routineCount: currentState.routineCount,
-        ));
+            product: currentState.product,
+            isFav: !newFavStatus,
+            isRoutine: currentState.isRoutine,
+            routineCount: currentState.routineCount,
+            productRelate: currentState.productRelate));
 
-        // homeBloc.add(UpdateUIEvent(
-        //     isFavorite: newFavStatus, productId: event.productId));
+        print("emit");
 
-        print("⭐ Favorite Updated: ${updatedProduct.name} -> $newFavStatus");
+        homeBloc.add(UpdateUIEvent(
+            isFavorite: !newFavStatus, productId: event.productId));
+
+        print(
+            "⭐ Favorite Updated: ${currentState.product.isFav} -> $newFavStatus");
       } catch (e) {
-        print("❌ Failed to update favorite: ${e.toString()}");
+        print("❌ Failed to update favoriteasdfasfd: ${e.toString()}");
       }
     }
   }
@@ -94,12 +100,14 @@ class ProductBloc extends Bloc<ProductEvent, ProductState> {
       final bool isRoutine = res.isRoutine;
       final int routineCount = res.routineCount ?? 0;
       final bool isFav = res.isFav;
+      final List<ProductRelateEntity> relate = res.productRelate!;
 
       emit(ProductDetailLoaded(
           product: res,
           isFav: isFav,
           isRoutine: isRoutine,
-          routineCount: routineCount));
+          routineCount: routineCount,
+          productRelate: relate));
 
       print("✅ โหลดสำเร็จ: ${event.productId}");
     } catch (e, stackTrace) {

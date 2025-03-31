@@ -418,7 +418,7 @@ class _SearchPageState extends State<SearchPage> {
                                                             .brands
                                                             .map((e) => e
                                                                         .count >
-                                                                    10
+                                                                    2
                                                                 ? ChoiceChip(
                                                                     key: ValueKey(
                                                                         e.name),

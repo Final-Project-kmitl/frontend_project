@@ -12,7 +12,11 @@ import 'package:project/features/product/presentation/bloc/product_bloc.dart';
 import 'package:project/features/product/presentation/widgets/card_benefit_scroll.dart';
 import 'package:project/features/product/presentation/widgets/ingredient_detail.dart';
 import 'package:project/features/product/presentation/widgets/ingredient_rating.dart';
+import 'package:project/features/product/presentation/widgets/product_relate_card.dart';
 import 'package:project/features/product/presentation/widgets/show_rating.dart';
+import 'package:project/features/report/presentation/pages/report_page.dart';
+import 'package:project/service_locator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductPage extends StatefulWidget {
   final int productId;
@@ -25,7 +29,6 @@ class ProductPage extends StatefulWidget {
 class _ProductPageState extends State<ProductPage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     context
         .read<ProductBloc>()
@@ -83,7 +86,8 @@ class _ProductPageState extends State<ProductPage> {
                                 left: 10,
                                 child: IconButton(
                                     onPressed: () {
-                                      Navigator.pop(context);
+                                      Navigator.pop(
+                                          context); // ถ้าไม่มีประวัติก่อนหน้าให้ปิดหน้าปัจจุบัน
                                     },
                                     icon: Icon(
                                       Icons.chevron_left_outlined,
@@ -128,23 +132,28 @@ class _ProductPageState extends State<ProductPage> {
                                         ),
                                       )),
                                   PopupMenuItem(
+                                      onTap: () {
+                                        AppNavigator.push(
+                                            context, ReportPage());
+                                      },
                                       child: Container(
-                                    child: Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
-                                      children: [
-                                        Icon(
-                                          Icons.report,
-                                          color: AppColors.red,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Icon(
+                                              Icons.report,
+                                              color: AppColors.red,
+                                            ),
+                                            Text(
+                                              "รายงาน",
+                                              style: TextThemes.bodyBold
+                                                  .copyWith(
+                                                      color: AppColors.red),
+                                            )
+                                          ],
                                         ),
-                                        Text(
-                                          "รายงาน",
-                                          style: TextThemes.bodyBold
-                                              .copyWith(color: AppColors.red),
-                                        )
-                                      ],
-                                    ),
-                                  ))
+                                      ))
                                 ],
                               ),
                             ),
@@ -276,7 +285,8 @@ class _ProductPageState extends State<ProductPage> {
                                 height: 24,
                               ),
                               Container(
-                                child: Text("data"),
+                                child: ProductRelateCard(
+                                    product: state.productRelate),
                               ),
                               const SizedBox(
                                 height: 24,
@@ -351,15 +361,14 @@ class _ProductPageState extends State<ProductPage> {
                     ),
                     Expanded(
                       child: GestureDetector(
-                        onTap: state.isRoutine
+                        onTap: (state.isRoutine ?? false) ||
+                                (state.routineCount ?? 0) >= 10
                             ? null
-                            : state.routineCount! >= 10
-                                ? null
-                                : () {
-                                    context.read<ProductBloc>().add(
-                                        AddProductToRoutineEvent(
-                                            productId: widget.productId));
-                                  },
+                            : () {
+                                context.read<ProductBloc>().add(
+                                    AddProductToRoutineEvent(
+                                        productId: widget.productId));
+                              },
                         child: Container(
                           decoration: BoxDecoration(
                             color: state.isRoutine || state.routineCount! >= 10

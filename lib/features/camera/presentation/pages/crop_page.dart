@@ -22,13 +22,13 @@ class _CropPageState extends State<CropPage> {
       aspectRatio: null, // Change here
       uiSettings: [
         AndroidUiSettings(
-          toolbarTitle: 'กรุณาครอปเฉพาะที่เป็นส่วนผสม',
+          toolbarTitle: 'ครอปเฉพาะที่เป็นส่วนผสม',
           toolbarColor: Colors.black,
           toolbarWidgetColor: Colors.white,
           lockAspectRatio: false, // Allow any aspect ratio
         ),
         IOSUiSettings(
-          title: 'กรุณาครอปเฉพาะที่เป็นส่วนผสม',
+          title: 'ครอปเฉพาะที่เป็นส่วนผสม',
           aspectRatioLockEnabled: false, // Allow any aspect ratio
         ),
       ],

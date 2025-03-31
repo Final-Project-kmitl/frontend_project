@@ -16,25 +16,29 @@ class ProductDetailLoaded extends ProductState {
   final bool isFav;
   final bool isRoutine;
   final int? routineCount;
+  final List<ProductRelateEntity> productRelate;
 
   ProductDetailLoaded({
     required this.product,
     required this.isFav,
     this.isRoutine = false, // ค่าเริ่มต้น
     this.routineCount = 0, // ค่าเริ่มต้น
+    required this.productRelate,
   });
 
   ProductDetailLoaded copyWith({
     ProductEntity? product,
     bool? isFav,
     bool? isRoutine,
-    int? routineCoutn,
+    int? routineCount,
+    List<ProductRelateEntity>? productRelate,
   }) {
     return ProductDetailLoaded(
         product: product ?? this.product,
         isFav: isFav ?? this.isFav,
         isRoutine: isRoutine ?? this.isRoutine,
-        routineCount: routineCoutn ?? this.routineCount);
+        routineCount: routineCount ?? this.routineCount,
+        productRelate: productRelate ?? this.productRelate);
   }
 
   @override

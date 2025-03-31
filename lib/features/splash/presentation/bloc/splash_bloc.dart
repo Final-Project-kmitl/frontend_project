@@ -17,6 +17,7 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   Future<void> _onCheckUser(
       CheckUserEvent event, Emitter<SplashState> emit) async {
     emit(SplashLoading());
+    await Future.delayed(Duration(seconds: 3));
 
     final Either<Failure, bool> result = await sl<CheckUser>().call();
 

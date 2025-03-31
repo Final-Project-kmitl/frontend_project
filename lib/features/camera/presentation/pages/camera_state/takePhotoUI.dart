@@ -8,9 +8,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:project/core/common/helper/navigation/app_navigation.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
+import 'package:project/features/camera/domain/entities/product_photo_entity.dart';
 import 'package:project/features/camera/presentation/bloc/camera_bloc.dart';
 import 'package:project/features/camera/presentation/pages/crop_page.dart';
 import 'package:project/features/camera/presentation/pages/show_img.dart';
+import 'package:project/features/camera/presentation/pages/show_with_no_ingre.dart';
+import 'package:project/features/product/presentation/pages/product_page.dart';
+import 'package:project/features/report/presentation/pages/report_page.dart';
 
 class TakePhotoUI extends StatefulWidget {
   final PhotoCameraState state;
@@ -26,6 +30,9 @@ class _TakePhotoUIState extends State<TakePhotoUI> {
   List<XFile> path = [];
   GlobalKey _previewKey = GlobalKey();
   bool _isNewState = false;
+  int detectIngre = 0;
+  List<DetectedIngredient>? detecIngredient;
+  ProductDetails? productDetail;
 
   Future<void> _takePhoto() async {
     try {
@@ -277,25 +284,52 @@ class _TakePhotoUIState extends State<TakePhotoUI> {
                                                             (context, state) {
                                                           if (state
                                                               is PhotoLoading) {
-                                                            return Center(
-                                                              child: Text(
-                                                                  "กำลังค้นหา"),
-                                                            );
-                                                          }
-
-                                                          if (state
-                                                                  is PhotoLoaded &&
-                                                              state.res
-                                                                      .matchingProducts ==
-                                                                  []) {
-                                                            return Container(
-                                                              child: Text(
-                                                                  "no product"),
+                                                            return Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .only(
+                                                                      top: 50),
+                                                              child: Center(
+                                                                child: Text(
+                                                                  "กำลังค้นหา",
+                                                                  style: TextThemes
+                                                                      .headline2,
+                                                                ),
+                                                              ),
                                                             );
                                                           }
 
                                                           if (state
                                                               is PhotoLoaded) {
+                                                            if (state
+                                                                .res
+                                                                .matchingProducts!
+                                                                .isEmpty) {
+                                                              return Padding(
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        top:
+                                                                            100),
+                                                                child: Center(
+                                                                  child: Column(
+                                                                    children: [
+                                                                      Text(
+                                                                        "ไม่พบผลิตภัณฑ์ที่คุณตามหา...",
+                                                                        style: TextThemes
+                                                                            .headline2,
+                                                                      ),
+                                                                      Text(
+                                                                        "พบส่วนผสม ${state.res.detectedIngredients!.length} ตัว",
+                                                                        style: TextThemes
+                                                                            .desc
+                                                                            .copyWith(color: AppColors.darkGrey),
+                                                                      )
+                                                                    ],
+                                                                  ),
+                                                                ),
+                                                              );
+                                                            }
                                                             return ListView
                                                                 .separated(
                                                               separatorBuilder:
@@ -324,102 +358,110 @@ class _TakePhotoUIState extends State<TakePhotoUI> {
                                                                       height:
                                                                           100);
                                                                 }
-                                                                return Container(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .all(
-                                                                              12),
-                                                                  decoration:
-                                                                      BoxDecoration(
-                                                                    color: AppColors
-                                                                        .paleBlue,
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            16),
-                                                                  ),
-                                                                  child: Row(
-                                                                    // Removed the expanded here
-                                                                    children: [
+                                                                return GestureDetector(
+                                                                  onTap: () {
+                                                                    AppNavigator.pushReplacement(
+                                                                        context,
+                                                                        ProductPage(
+                                                                            productId:
+                                                                                state.res.matchingProducts![index].id!));
+                                                                  },
+                                                                  child:
                                                                       Container(
-                                                                        padding:
-                                                                            EdgeInsets.all(12),
-                                                                        decoration:
-                                                                            BoxDecoration(
-                                                                          color:
-                                                                              AppColors.white,
-                                                                          borderRadius:
-                                                                              BorderRadius.circular(8),
-                                                                        ),
-                                                                        width:
-                                                                            100,
-                                                                        height:
-                                                                            100,
-                                                                        child: Image
-                                                                            .network(
-                                                                          fit: BoxFit
-                                                                              .contain,
-                                                                          state
-                                                                              .res
-                                                                              .matchingProducts![index]
-                                                                              .image!,
-                                                                        ),
-                                                                      ),
-                                                                      SizedBox(
-                                                                          width:
+                                                                    padding:
+                                                                        EdgeInsets.all(
+                                                                            12),
+                                                                    decoration:
+                                                                        BoxDecoration(
+                                                                      color: AppColors
+                                                                          .paleBlue,
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
                                                                               16),
-                                                                      Expanded(
-                                                                        child:
-                                                                            Column(
-                                                                          crossAxisAlignment:
-                                                                              CrossAxisAlignment.start,
-                                                                          mainAxisSize:
-                                                                              MainAxisSize.min,
-                                                                          children: [
-                                                                            Text(
-                                                                              state.res.matchingProducts![index].brand!,
-                                                                              style: TextThemes.desc.copyWith(color: AppColors.darkGrey),
-                                                                            ),
-                                                                            Text(
-                                                                              //removed expanded here
-                                                                              state.res.matchingProducts![index].name!,
-                                                                              style: TextThemes.bodyBold,
-                                                                              maxLines: 1,
-                                                                              softWrap: false,
-                                                                              overflow: TextOverflow.ellipsis,
-                                                                            ),
-                                                                            Row(
-                                                                              children: [
-                                                                                Container(
-                                                                                  padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
-                                                                                  decoration: BoxDecoration(
-                                                                                      borderRadius: BorderRadius.circular(4),
-                                                                                      color: state.res.matchingProducts![index].rating! > 75
-                                                                                          ? AppColors.quality_good_match
-                                                                                          : state.res.matchingProducts![index].rating! > 50
-                                                                                              ? AppColors.quality_medium_match
-                                                                                              : state.res.matchingProducts![index].rating! > 25
-                                                                                                  ? AppColors.quality_poor_match
-                                                                                                  : AppColors.quality_not_math),
-                                                                                  child: Text(
-                                                                                    "${state.res.matchingProducts![index].rating!.toString()}/100",
-                                                                                    style: TextThemes.descBold.copyWith(color: AppColors.white),
-                                                                                  ),
-                                                                                ),
-                                                                                SizedBox(
-                                                                                  width: 12,
-                                                                                ),
-                                                                              ],
-                                                                            ),
-                                                                            Expanded(
-                                                                                child: Row(
-                                                                              children: [
-                                                                                Text("ดูรายละเอียด")
-                                                                              ],
-                                                                            ))
-                                                                          ],
+                                                                    ),
+                                                                    child: Row(
+                                                                      // Removed the expanded here
+                                                                      children: [
+                                                                        Container(
+                                                                          padding:
+                                                                              EdgeInsets.all(12),
+                                                                          decoration:
+                                                                              BoxDecoration(
+                                                                            color:
+                                                                                AppColors.white,
+                                                                            borderRadius:
+                                                                                BorderRadius.circular(8),
+                                                                          ),
+                                                                          width:
+                                                                              100,
+                                                                          height:
+                                                                              100,
+                                                                          child:
+                                                                              Image.network(
+                                                                            fit:
+                                                                                BoxFit.contain,
+                                                                            state.res.matchingProducts![index].image!,
+                                                                          ),
                                                                         ),
-                                                                      ),
-                                                                    ],
+                                                                        SizedBox(
+                                                                            width:
+                                                                                16),
+                                                                        Expanded(
+                                                                          child:
+                                                                              Column(
+                                                                            crossAxisAlignment:
+                                                                                CrossAxisAlignment.start,
+                                                                            mainAxisSize:
+                                                                                MainAxisSize.min,
+                                                                            children: [
+                                                                              Text(
+                                                                                state.res.matchingProducts![index].brand!,
+                                                                                style: TextThemes.desc.copyWith(color: AppColors.darkGrey),
+                                                                              ),
+                                                                              Text(
+                                                                                //removed expanded here
+                                                                                state.res.matchingProducts![index].name!,
+                                                                                style: TextThemes.bodyBold,
+                                                                                maxLines: 1,
+                                                                                softWrap: false,
+                                                                                overflow: TextOverflow.ellipsis,
+                                                                              ),
+                                                                              Row(
+                                                                                children: [
+                                                                                  Container(
+                                                                                    padding: EdgeInsets.symmetric(horizontal: 6, vertical: 4),
+                                                                                    decoration: BoxDecoration(
+                                                                                        borderRadius: BorderRadius.circular(4),
+                                                                                        color: state.res.matchingProducts![index].rating! > 75
+                                                                                            ? AppColors.quality_good_match
+                                                                                            : state.res.matchingProducts![index].rating! > 50
+                                                                                                ? AppColors.quality_medium_match
+                                                                                                : state.res.matchingProducts![index].rating! > 25
+                                                                                                    ? AppColors.quality_poor_match
+                                                                                                    : AppColors.quality_not_math),
+                                                                                    child: Text(
+                                                                                      "${state.res.matchingProducts![index].rating!.toString()}/100",
+                                                                                      style: TextThemes.descBold.copyWith(color: AppColors.white),
+                                                                                    ),
+                                                                                  ),
+                                                                                  SizedBox(
+                                                                                    width: 12,
+                                                                                  ),
+                                                                                ],
+                                                                              ),
+                                                                              Row(
+                                                                                children: [
+                                                                                  Text(
+                                                                                    "ดูรายละเอียด",
+                                                                                    style: TextThemes.desc.copyWith(color: AppColors.darkGrey),
+                                                                                  )
+                                                                                ],
+                                                                              )
+                                                                            ],
+                                                                          ),
+                                                                        ),
+                                                                      ],
+                                                                    ),
                                                                   ),
                                                                 );
                                                               },
@@ -442,6 +484,8 @@ class _TakePhotoUIState extends State<TakePhotoUI> {
                                                 left: 0,
                                                 right: 0,
                                                 child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: AppColors.white),
                                                   width: double
                                                       .infinity, // ✅ กำหนดขนาดที่แน่นอน
                                                   padding: EdgeInsets.only(
@@ -480,61 +524,120 @@ class _TakePhotoUIState extends State<TakePhotoUI> {
                                                         Row(
                                                           children: [
                                                             Expanded(
-                                                              child: Container(
-                                                                decoration: BoxDecoration(
-                                                                    border: Border.all(
-                                                                        color: AppColors
-                                                                            .grey),
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            16)),
-                                                                height: 50,
-                                                                child: Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Icon(Icons
-                                                                        .flag_outlined),
-                                                                    SizedBox(
-                                                                      width: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      "รายงาน",
-                                                                      style: TextThemes
-                                                                          .bodyBold,
-                                                                    )
-                                                                  ],
+                                                              child:
+                                                                  GestureDetector(
+                                                                onTap: () {
+                                                                  AppNavigator
+                                                                      .pushReplacement(
+                                                                          context,
+                                                                          ReportPage());
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  decoration: BoxDecoration(
+                                                                      border: Border.all(
+                                                                          color: AppColors
+                                                                              .grey),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              16)),
+                                                                  height: 50,
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Icon(Icons
+                                                                          .flag_outlined),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            8,
+                                                                      ),
+                                                                      Text(
+                                                                        "รายงาน",
+                                                                        style: TextThemes
+                                                                            .bodyBold,
+                                                                      )
+                                                                    ],
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
                                                             SizedBox(width: 16),
                                                             Expanded(
-                                                              child: Container(
-                                                                decoration: BoxDecoration(
-                                                                    border: Border.all(
-                                                                        color: AppColors
-                                                                            .grey),
-                                                                    borderRadius:
-                                                                        BorderRadius.circular(
-                                                                            16)),
-                                                                height: 50,
-                                                                child: Row(
-                                                                  mainAxisAlignment:
-                                                                      MainAxisAlignment
-                                                                          .center,
-                                                                  children: [
-                                                                    Icon(Icons
-                                                                        .show_chart),
-                                                                    SizedBox(
-                                                                      width: 8,
-                                                                    ),
-                                                                    Text(
-                                                                      "วิเคราะห์ต่อไป",
-                                                                      style: TextThemes
-                                                                          .bodyBold,
-                                                                    )
-                                                                  ],
+                                                              child:
+                                                                  GestureDetector(
+                                                                onTap: () {
+                                                                  detectIngre ==
+                                                                          0
+                                                                      ? showDialog(
+                                                                          context:
+                                                                              context,
+                                                                          builder:
+                                                                              (context) {
+                                                                            return AlertDialog(
+                                                                              backgroundColor: AppColors.white,
+                                                                              title: Text(
+                                                                                "ไม่สามารถวิเคราะห์ได้",
+                                                                                style: TextThemes.headline2,
+                                                                              ),
+                                                                              content: Text(
+                                                                                "เนื่องจากแอพลิเคชั่นไม่สามารถตรวจส่วนผสมได้ กรุณาดูคำแนะนำการถ่ายรูปและถ่ายรูปใหม่",
+                                                                                style: TextThemes.body,
+                                                                              ),
+                                                                              actions: [
+                                                                                TextButton(
+                                                                                    onPressed: () {
+                                                                                      Navigator.pop(context);
+                                                                                    },
+                                                                                    child: Container(
+                                                                                      padding: EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                                                                                      decoration: BoxDecoration(color: AppColors.black, borderRadius: BorderRadius.circular(12)),
+                                                                                      child: Text(
+                                                                                        "ปิด",
+                                                                                        style: TextThemes.bodyBold.copyWith(color: AppColors.white),
+                                                                                      ),
+                                                                                    ))
+                                                                              ],
+                                                                            );
+                                                                          })
+                                                                      : AppNavigator.pushReplacement(
+                                                                          context,
+                                                                          ShowWithNoIngre(
+                                                                            detectedIngredient:
+                                                                                detecIngredient!,
+                                                                            productDetails:
+                                                                                productDetail!,
+                                                                          ));
+                                                                },
+                                                                child:
+                                                                    Container(
+                                                                  decoration: BoxDecoration(
+                                                                      border: Border.all(
+                                                                          color: AppColors
+                                                                              .grey),
+                                                                      borderRadius:
+                                                                          BorderRadius.circular(
+                                                                              16)),
+                                                                  height: 50,
+                                                                  child: Row(
+                                                                    mainAxisAlignment:
+                                                                        MainAxisAlignment
+                                                                            .center,
+                                                                    children: [
+                                                                      Icon(Icons
+                                                                          .show_chart),
+                                                                      SizedBox(
+                                                                        width:
+                                                                            8,
+                                                                      ),
+                                                                      Text(
+                                                                        "วิเคราะห์ต่อไป",
+                                                                        style: TextThemes
+                                                                            .bodyBold,
+                                                                      )
+                                                                    ],
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ), // ✅ กำหนด height

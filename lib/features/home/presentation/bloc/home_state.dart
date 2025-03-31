@@ -93,18 +93,6 @@ class HomeLoaded extends HomeState {
   });
 
   // ✅ สร้าง state เริ่มต้น (empty state)
-  factory HomeLoaded.empty() {
-    return HomeLoaded(
-      recommended: [],
-      popular: [],
-      recent: [],
-      favorite: [],
-      isRecommendedLoaded: false,
-      isPopularLoaded: false,
-      isRecentLoaded: false,
-      isFavoriteLoaded: false,
-    );
-  }
 
   // ✅ copyWith() เพื่ออัปเดต state เฉพาะบางส่วน
   HomeLoaded copyWith({

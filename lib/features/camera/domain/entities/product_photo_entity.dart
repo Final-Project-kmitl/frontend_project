@@ -125,12 +125,14 @@ class ProductDetails {
   final List<String>? benefits;
   final List<String>? concerns;
   final List<ProductBenefit>? productBenefits;
+  final String? analysisRating;
 
   ProductDetails({
     this.ingredients,
     this.benefits,
     this.concerns,
     this.productBenefits,
+    this.analysisRating,
   });
 
   factory ProductDetails.fromJson(Map<String, dynamic> json) {
@@ -149,6 +151,7 @@ class ProductDetails {
           ? List<ProductBenefit>.from(
               json['product_benefits'].map((x) => ProductBenefit.fromJson(x)))
           : null,
+      analysisRating: json['analysisRating'].toString(),
     );
   }
 }

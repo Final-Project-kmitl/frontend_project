@@ -19,6 +19,8 @@ class AppUrl {
   //register
   static final user = "${baseUrl}/user";
 
+  static final register = "${baseUrl}/auth/register";
+
   static final ingredient_search = "$baseUrl/ingredient/search";
 
   //get Favorite product
@@ -45,6 +47,8 @@ class AppUrl {
   static final product_detail = "${baseUrl}/product";
 
   static final product_barcode = "${baseUrl}/product/barcode";
+
+  static final product_relate = "${baseUrl}/product/related";
 
   //delete Favorite Product
   static final favorite_delete_add = "${baseUrl}/user/favorite-product";

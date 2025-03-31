@@ -35,11 +35,6 @@ class ShowSuggestion extends StatelessWidget {
       body: BlocBuilder<HomeBloc, HomeState>(
         builder: (context, state) {
           if (state is HomeLoaded) {
-            IconData getFavIcon(int productId) {
-              bool isFav = state.favorite.any((fav) => fav == productId);
-              return isFav ? Icons.favorite : Icons.favorite_border_sharp;
-            }
-
             return Padding(
               padding: const EdgeInsets.symmetric(
                 horizontal: 20,
@@ -92,23 +87,24 @@ class ShowSuggestion extends StatelessWidget {
                                     ),
                                   ),
                                   Positioned(
-                                      top: 6,
-                                      right: 6,
-                                      child: GestureDetector(
-                                        onTap: () {
-                                          bool isFav = favProduct.any((fav) =>
-                                              fav == product[index].id);
+                                    top: 6,
+                                    right: 6,
+                                    child: state.favorite.any(
+                                            (fav) => fav == product[index].id)
+                                        ? Icon(
+                                            Icons.favorite,
+                                            color: AppColors.red,
+                                          )
+                                        : Container(),
 
-                                          context.read<HomeBloc>().add(
-                                              ToggleFavoriteEvent(
-                                                  productId: product[index].id,
-                                                  isFavorite: isFav));
-                                        },
-                                        child: Icon(
-                                          getFavIcon(product[index].id),
-                                          size: 24,
-                                        ),
-                                      ))
+                                    // Icon(
+                                    //   state.favorite.any(
+                                    //           (fav) => fav == product[index].id)
+                                    //       ? Icons.favorite
+                                    //       : Icons.abc,
+                                    //   size: 24,
+                                    // ),
+                                  )
                                 ],
                               ),
                             ),

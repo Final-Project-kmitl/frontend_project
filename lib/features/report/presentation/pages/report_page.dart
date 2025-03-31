@@ -101,7 +101,7 @@ class _ReportPageState extends State<ReportPage> {
 
               await Future.delayed(Duration(seconds: 2));
 
-              context.read<HomeBloc>().add(RestoreHomeEvent());
+              // context.read<HomeBloc>().add(RestoreHomeEvent());
               AppNavigator.pushAndRemove(context, HomePage());
             },
             style: ((productText.text.isEmpty || brandText.text.isEmpty) ||

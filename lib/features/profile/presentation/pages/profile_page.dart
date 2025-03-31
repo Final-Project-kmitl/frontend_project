@@ -4,13 +4,18 @@ import 'package:project/core/common/helper/navigation/app_navigation.dart';
 import 'package:project/core/common/widgets/center_loading.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
-import 'package:project/features/favorite/presentation/pages/favorite_page.dart';
+import 'package:project/core/constants/api_url.dart';
+import 'package:project/core/constants/share_pref.dart';
+import 'package:project/core/network/dio_client.dart';
 import 'package:project/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:project/features/profile/presentation/pages/edit_skin_allergies_page.dart';
 import 'package:project/features/profile/presentation/pages/edit_skin_problem_page.dart';
 import 'package:project/features/profile/presentation/pages/edit_skin_type_page.dart';
 import 'package:project/features/profile/presentation/widgets/skin_type_tag.dart';
 import 'package:project/features/report/presentation/pages/report_page.dart';
+import 'package:project/features/splash/presentation/pages/splash_page.dart';
+import 'package:project/service_locator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -321,8 +326,18 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 child: FilledButton(
                                                   style:
                                                       ButtonThemes.denialButton,
-                                                  onPressed: () {
+                                                  onPressed: () async {
                                                     /* Logic ลบบัญชี */
+                                                    sl<SharedPreferences>()
+                                                        .setString(
+                                                            shared_pref.userId,
+                                                            "");
+
+                                                    // await sl<DioClient>().delete(
+                                                    //     "${AppUrl}/user/account");
+
+                                                    AppNavigator.pushAndRemove(
+                                                        context, SplashPage());
                                                   },
                                                   child: Text('ลบ',
                                                       style: TextThemes.descBold

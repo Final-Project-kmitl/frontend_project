@@ -18,6 +18,7 @@ class ProductEntity {
   final int routineCount;
   final SkincareDetailsEntity? skincareDetails;
   final String? barcodeId;
+  final List<ProductRelateEntity> productRelate;
 
   ProductEntity({
     required this.id,
@@ -39,6 +40,7 @@ class ProductEntity {
     required this.routineCount,
     this.skincareDetails,
     this.barcodeId,
+    required this.productRelate,
   });
 
   ProductEntity copyWith({bool? isFav}) {
@@ -62,6 +64,7 @@ class ProductEntity {
       isFav: isFav ?? this.isFav,
       skincareDetails: skincareDetails,
       barcodeId: barcodeId,
+      productRelate: productRelate,
     );
   }
 }
@@ -113,6 +116,19 @@ class ProductTypeEntity {
   ProductTypeEntity({
     required this.id,
     required this.name,
+  });
+}
+
+class ProductRelateEntity {
+  final int id;
+  final String brand;
+  final String name;
+  final String image_url;
+  ProductRelateEntity({
+    required this.id,
+    required this.brand,
+    required this.name,
+    required this.image_url,
   });
 }
 

@@ -42,12 +42,12 @@ class _ProfilePageState extends State<ProfilePage> {
           return SafeArea(
             top: true,
             child: Padding(
-              padding: const EdgeInsets.all(20.0),
+              padding: const EdgeInsets.only(top: 16.0, right: 20, left: 20),
               child: SingleChildScrollView(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const SizedBox(height: 24),
+                    // const SizedBox(height: 16),
                     const Text('เกี่ยวกับฉัน', style: TextThemes.headline1),
                     const SizedBox(height: 16),
                     Wrap(

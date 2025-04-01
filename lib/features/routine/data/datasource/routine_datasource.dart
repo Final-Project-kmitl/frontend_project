@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:project/core/constants/api_url.dart';
 import 'package:project/core/constants/share_pref.dart';
 import 'package:project/core/network/dio_client.dart';
-import 'package:project/features/routine/data/datasource/mock_nomatch_routine.dart';
 import 'package:project/features/routine/data/models/no_match_model.dart';
 import 'package:project/features/routine/data/models/product_model.dart';
 import 'package:project/features/routine/domain/entities/product_entity.dart';
@@ -47,7 +46,7 @@ class apiServiceRoutine implements RoutineRemoteDatasource {
         throw Exception("Fail to load product in user's routine");
       }
     } catch (e) {
-      return mockNoMatchData;
+      throw Exception("Fail to load product in user's");
     }
   }
 
@@ -138,8 +137,6 @@ class apiServiceRoutine implements RoutineRemoteDatasource {
           .toList();
 
       return {"products": products, "count": routineIds.length};
-
-
     } catch (e) {
       throw Exception(e.toString());
     }

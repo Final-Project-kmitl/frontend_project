@@ -91,10 +91,7 @@ class ShowSuggestion extends StatelessWidget {
                                     right: 6,
                                     child: state.favorite.any(
                                             (fav) => fav == product[index].id)
-                                        ? Icon(
-                                            Icons.favorite,
-                                            color: AppColors.red,
-                                          )
+                                        ? Container()
                                         : Container(),
 
                                     // Icon(

@@ -84,7 +84,7 @@ Future<void> setupServiceLocator() async {
       () async => await SharedPreferences.getInstance());
 
   await sl.allReady();
-  // sl<SharedPreferences>().setString(shared_pref.userId, "1");
+  sl<SharedPreferences>().setString(shared_pref.userId, "1");
   sl<SharedPreferences>().setBool("doNotShowAgain", false);
   sl<SharedPreferences>().setStringList("recent", ["Cerave", "namo", "bhudda"]);
   sl<SharedPreferences>().setStringList("page", []);

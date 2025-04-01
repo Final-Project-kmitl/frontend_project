@@ -23,6 +23,7 @@ class apiServiceProduct implements ProductDatasource {
     }
 
     try {
+      List<ProductRelateModel> productRelate = [];
       // 🔹 ดึงข้อมูลสินค้า
       final productRes = await dio.get(
         "${AppUrl.product_detail}/$productId",
@@ -50,13 +51,15 @@ class apiServiceProduct implements ProductDatasource {
       if (favoriteRes.data is! List<dynamic>) {
         throw Exception("Invalid favorite data format");
       }
-
       final resProductRelate =
-          await dio.get("${AppUrl.product_relate}/${productId}");
+          await dio.get("${AppUrl.product_relate}/$productId");
 
-      final productRelate = (resProductRelate.data['items'] as List)
-          .map((e) => ProductRelateModel.fromJson(e))
-          .toList();
+      if (resProductRelate.data != null &&
+          resProductRelate.data['items'] is List) {
+        productRelate = (resProductRelate.data['items'] as List)
+            .map((e) => ProductRelateModel.fromJson(e))
+            .toList();
+      }
 
       final favoriteList = List<Map<String, dynamic>>.from(favoriteRes.data);
 
@@ -74,6 +77,13 @@ class apiServiceProduct implements ProductDatasource {
         _isRoutine = routineList.any((routine) => routine["id"] == productId);
 
         _routineCount = routineList.length;
+      } on DioException catch (e) {
+        if (e.response?.statusCode == 404) {
+          print("🔹 Product relate not found (404), returning empty list.");
+          productRelate = []; // ✅ 404 → ให้เป็น []
+        } else {
+          print("❌ API Error: ${e.response?.statusCode} - ${e.response?.data}");
+        }
       } catch (e) {
         if (e is DioException && e.response?.statusCode == 404) {
           _isRoutine = false;
@@ -82,8 +92,6 @@ class apiServiceProduct implements ProductDatasource {
           throw Exception("Routine ERror : $e");
         }
       }
-
-      print("RELATE   :   ${productRelate}");
 
       return ProductModel.fromJson(productData).copyWith(
           isFav: isFavorite,
@@ -116,7 +124,6 @@ class apiServiceProduct implements ProductDatasource {
 
   @override
   Future<void> removeFavorite(int productId) async {
-    print("REMOVE");
     try {
       final res = await dio.delete(AppUrl.favorite_delete_add,
           data: {"userId": userId, "productId": productId});

@@ -164,12 +164,12 @@ class _RoutinePageState extends State<RoutinePage> {
                                 separatorBuilder: (context, index) =>
                                     const SizedBox(height: 12),
                                 itemBuilder: (context, index) {
-                                  final noMatch = state.nomatRoutine[index];
-                                  if (index == state.nomatRoutine.length + 1) {
+                                  if (index == state.nomatRoutine.length) {
                                     return SizedBox(
                                       height: 52,
                                     );
                                   }
+                                  final noMatch = state.nomatRoutine[index];
                                   return Container(
                                     padding: const EdgeInsets.all(12),
                                     decoration: BoxDecoration(

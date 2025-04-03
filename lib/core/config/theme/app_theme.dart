@@ -2,34 +2,41 @@ import 'package:flutter/material.dart';
 import 'package:project/core/config/theme/app_color.dart';
 
 class TextThemes {
-  static const fontFamily = "";
+  static const font = "IBMPlexSansThai";
   static const headline1 = TextStyle(
-    fontSize: 22,
+    fontFamily: font,
+    fontSize: 20,
     fontWeight: FontWeight.w700,
     color: AppColors.black,
   );
   static const headline2 = TextStyle(
-    fontSize: 20,
+    fontFamily: font,
+    fontSize: 18,
     fontWeight: FontWeight.w600,
     color: AppColors.black,
   );
   static const bodyBold = TextStyle(
-    fontSize: 17,
+    fontFamily: font,
+    fontSize: 15,
     fontWeight: FontWeight.w600,
     color: AppColors.black,
   );
   static const body = TextStyle(
-    fontSize: 17,
+    fontFamily: font,
+    fontSize: 15,
     fontWeight: FontWeight.w400,
     color: AppColors.black,
   );
+
   static const descBold = TextStyle(
-    fontSize: 14,
+    fontFamily: font,
+    fontSize: 12,
     fontWeight: FontWeight.w500,
     color: AppColors.black,
   );
   static const desc = TextStyle(
-    fontSize: 14,
+    fontFamily: font,
+    fontSize: 12,
     fontWeight: FontWeight.w400,
     color: AppColors.black,
   );
@@ -41,6 +48,9 @@ class ButtonThemes {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)));
   static final normalButton = ElevatedButton.styleFrom(
       backgroundColor: AppColors.black,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)));
+  static final denialButton = FilledButton.styleFrom(
+      backgroundColor: AppColors.bg_score_card_red,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)));
   static final backwardButton = ElevatedButton.styleFrom(
       backgroundColor: AppColors.transparent,
@@ -69,7 +79,7 @@ class AppTheme {
         borderSide: BorderSide(width: 3, color: AppColors.beige),
       ),
       fillColor: AppColors.white,
-      hintStyle: TextStyle(color: AppColors.grey),
+      hintStyle: TextThemes.body.copyWith(color: AppColors.grey),
     ),
   );
 }

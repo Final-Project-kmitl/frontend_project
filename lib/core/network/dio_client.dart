@@ -11,8 +11,8 @@ class DioClient {
               baseUrl: AppUrl.baseUrl,
               headers: {'Content-Type': 'application/json; charset=UTF-8'},
               responseType: ResponseType.json,
-              sendTimeout: const Duration(seconds: 10),
-              receiveTimeout: const Duration(seconds: 10)),
+              sendTimeout: const Duration(seconds: 100),
+              receiveTimeout: const Duration(seconds: 100)),
         )..interceptors
             .addAll([AuthorizationInterceptor(), LoggerInterceptor()]);
 
@@ -103,7 +103,7 @@ class DioClient {
         options: options,
         cancelToken: cancelToken,
       );
-      return response.data;
+      return response;
     } catch (e) {
       rethrow;
     }

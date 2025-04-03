@@ -6,4 +6,5 @@ abstract class UserRepository {
   Future<void> updateAllergy(List<int> onAdd, List<int> onDelete);
   Future<void> updateSkinProblem(List<int> onAdd, List<int> onDelete);
   Future<void> updateSkinType(int skinTypeId);
+  Future<void> deleteAccount();
 }

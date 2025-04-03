@@ -416,7 +416,7 @@ class _SkinTypeQuizState extends State<SkinTypeQuiz> {
             SizedBox(
               width: double.infinity,
               child: Text(
-                "วิธีการดูแลผิวปกติ",
+                "วิธีการดูแล${_resultQuiz['title']}",
                 style: TextThemes.bodyBold,
               ),
             ),

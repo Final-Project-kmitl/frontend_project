@@ -4,6 +4,7 @@ import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
 import 'package:project/features/product/domain/entities/product_entity.dart';
 import 'package:project/features/product/presentation/pages/product_page.dart';
+import 'package:project/features/search/domain/entities/count_filter_entity.dart';
 
 class ProductRelateCard extends StatelessWidget {
   final List<ProductRelateEntity> product;
@@ -12,7 +13,7 @@ class ProductRelateCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 210,
+      height: product.length == 0 ? 0 : 210,
       child: ListView.separated(
           scrollDirection: Axis.horizontal,
           itemBuilder: (context, index) {
@@ -25,9 +26,14 @@ class ProductRelateCard extends StatelessWidget {
             final item = product[index - 1];
             return GestureDetector(
               onTap: () {
-                AppNavigator.pushReplacement(
-                  context,
-                  ProductPage(productId: item.id),
+                // สร้าง key ใหม่เพื่อบังคับให้ widget สร้างใหม่ทั้งหมด
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ProductPage(
+                      key: UniqueKey(), // เพิ่ม unique key
+                      productId: item.id,
+                    ),
+                  ),
                 );
               },
               child: Container(

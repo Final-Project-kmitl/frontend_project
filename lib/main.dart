@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:project/features/routine/presentation/bloc/routine_bloc.dart';
 import 'package:project/core/config/theme/app_theme.dart';
 import 'package:project/features/auth/presentation/bloc/auth_bloc.dart';
 import 'package:project/features/auth/presentation/pages/form_page.dart';
@@ -11,7 +12,6 @@ import 'package:project/features/home/presentation/pages/home_page.dart';
 import 'package:project/features/product/presentation/bloc/product_bloc.dart';
 import 'package:project/features/profile/presentation/bloc/profile_bloc.dart';
 import 'package:project/features/profile/presentation/pages/profile_page.dart';
-import 'package:project/features/routine/presentation/bloc/routine_bloc.dart';
 import 'package:project/features/routine/presentation/pages/routine_page.dart';
 import 'package:project/features/search/presentation/bloc/search_bloc.dart';
 import 'package:project/features/search/presentation/pages/search_page.dart';

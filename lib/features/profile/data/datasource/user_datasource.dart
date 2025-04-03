@@ -13,6 +13,7 @@ abstract class UserDatasource {
   Future<List<AllergyEntity>> fetchQueryAllergic(String query);
   Future<void> fetchUpdate(List<int> onAdd, List<int> onDelete);
   Future<void> updateSkinType(int skinTypeId);
+  Future<void> deleteAccount();
 }
 
 class ApiServiceUser implements UserDatasource {
@@ -21,7 +22,7 @@ class ApiServiceUser implements UserDatasource {
   @override
   Future<UserEntity> fetchUserInfo() async {
     print("START");
-    if (userId == null) {
+    if (userId == "") {
       throw Exception("User Id not found in SharedPref");
     }
     final url = Uri.parse("${AppUrl.profile_user}");
@@ -116,6 +117,15 @@ class ApiServiceUser implements UserDatasource {
       }
     } catch (e) {
       throw Exception(e.toString());
+    }
+  }
+
+  @override
+  Future<void> deleteAccount() async {
+    try {
+      final message = await dio.delete(AppUrl.delete_user_account);
+    } catch (e) {
+      throw Exception("Error : $e");
     }
   }
 }

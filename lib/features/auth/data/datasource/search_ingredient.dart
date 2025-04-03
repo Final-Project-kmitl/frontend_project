@@ -67,6 +67,11 @@ class apiServiceAuth implements AuthApiService {
       final registerRes = await dio.post("${AppUrl.register}",
           data: {"userId": userId, "skinTypeId": skinId});
 
+      sl<SharedPreferences>()
+          .setString(shared_pref.userId, registerRes.data['userId'].toString());
+      sl<SharedPreferences>()
+          .setString(shared_pref.token, registerRes.data['accessToken']);
+
       final allergic = await dio.post("${AppUrl.profile_ingredient}",
           data: {"userId": userId, "ingredientIds": allergicListId});
 
@@ -77,7 +82,7 @@ class apiServiceAuth implements AuthApiService {
 
       sl<SharedPreferences>().setString(shared_pref.userId, userId.toString());
     } catch (e) {
-      throw Exception("");
+      throw Exception(e.toString());
     }
   }
 }

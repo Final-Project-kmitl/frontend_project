@@ -30,4 +30,9 @@ class UserRepositoryImpl implements UserRepository {
   Future<void> updateSkinType(int skinTypeId) {
     return userDatasource.updateSkinType(skinTypeId);
   }
+
+  @override
+  Future<void> deleteAccount() {
+    return userDatasource.deleteAccount();
+  }
 }

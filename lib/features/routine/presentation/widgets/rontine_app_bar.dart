@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:project/core/common/helper/navigation/app_navigation.dart';
 import 'package:project/core/config/theme/app_color.dart';
 import 'package:project/core/config/theme/app_theme.dart';
+import 'package:project/features/home/presentation/pages/home_page.dart';
 import 'package:project/features/routine/presentation/pages/routine_delete_page.dart';
 import 'package:project/features/routine/presentation/pages/search_product_page.dart';
 

@@ -14,6 +14,7 @@ import 'package:project/features/profile/presentation/pages/edit_skin_type_page.
 import 'package:project/features/profile/presentation/widgets/skin_type_tag.dart';
 import 'package:project/features/report/presentation/pages/report_page.dart';
 import 'package:project/features/splash/presentation/pages/splash_page.dart';
+import 'package:project/main.dart';
 import 'package:project/service_locator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -328,16 +329,23 @@ class _ProfilePageState extends State<ProfilePage> {
                                                       ButtonThemes.denialButton,
                                                   onPressed: () async {
                                                     /* Logic ลบบัญชี */
-                                                    sl<SharedPreferences>()
-                                                        .setString(
-                                                            shared_pref.userId,
-                                                            "");
+                                                    await sl<
+                                                            SharedPreferences>()
+                                                        .clear();
 
-                                                    // await sl<DioClient>().delete(
-                                                    //     "${AppUrl}/user/account");
+                                                    // หรือลบเฉพาะค่าที่ต้องการ
+                                                    await sl<
+                                                            SharedPreferences>()
+                                                        .remove(
+                                                            shared_pref.userId);
+                                                    await sl<
+                                                            SharedPreferences>()
+                                                        .remove(
+                                                            shared_pref.token);
+
 
                                                     AppNavigator.pushAndRemove(
-                                                        context, SplashPage());
+                                                        context, MyApp());
                                                   },
                                                   child: Text('ลบ',
                                                       style: TextThemes.descBold

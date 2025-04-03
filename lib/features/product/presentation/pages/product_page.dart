@@ -15,8 +15,6 @@ import 'package:project/features/product/presentation/widgets/ingredient_rating.
 import 'package:project/features/product/presentation/widgets/product_relate_card.dart';
 import 'package:project/features/product/presentation/widgets/show_rating.dart';
 import 'package:project/features/report/presentation/pages/report_page.dart';
-import 'package:project/service_locator.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class ProductPage extends StatefulWidget {
   final int productId;
@@ -35,12 +33,20 @@ class _ProductPageState extends State<ProductPage> {
         .add(ProductDetailRequestedEvent(productId: widget.productId));
   }
 
+  // @override
+  // void didUpdateWidget(ProductPage oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+  //   if (oldWidget.productId != widget.productId) {
+  //     context
+  //         .read<ProductBloc>()
+  //         .add(ProductDetailRequestedEvent(productId: widget.productId));
+  //   }
+  // }
+
   @override
   Widget build(BuildContext context) {
-    print("🔍 Building ProductPage");
     return BlocBuilder<ProductBloc, ProductState>(
       builder: (context, state) {
-        print("🔄 BlocBuilder state: $state");
         if (state is ProductDetailLoading) {
           return CenterLoading();
         } else if (state is ProductDetailLoaded) {

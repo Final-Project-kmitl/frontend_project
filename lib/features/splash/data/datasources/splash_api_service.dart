@@ -20,7 +20,7 @@ class SplashApiServiceImpl extends SplashApiService {
   Future<Either<Failure, bool>> chechUserAPI() async {
     print("User id : ${userId}");
     try {
-      if (userId == "") {
+      if (userId == "" || userId == null) {
         return Left(ServerFailure("User is null"));
       } else {
         final res = await dio.post("${AppUrl.baseUrl}/auth/authenticate",

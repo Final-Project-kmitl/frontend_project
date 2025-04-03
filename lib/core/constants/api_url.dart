@@ -32,6 +32,8 @@ class AppUrl {
 
   static final product_search = "${baseUrl}/product/search";
 
+  static final delete_user_account = "${baseUrl}/user/account";
+
   static final product_countFilter = "${baseUrl}/product/countFilter";
 
   //user

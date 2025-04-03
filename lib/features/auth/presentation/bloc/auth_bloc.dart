@@ -50,9 +50,9 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
       sl<SharedPreferences>()
           .setString(shared_pref.userId, event.userId.toString());
 
-      final homeBloc = sl<HomeBloc>();
-      homeBloc.add(HomeDataRequestedEvent());
-      await homeBloc.stream.firstWhere((state) => state is HomeLoaded);
+      // final homeBloc = sl<HomeBloc>();
+      // homeBloc.add(HomeDataRequestedEvent());
+      // await homeBloc.stream.firstWhere((state) => state is HomeLoaded);
 
       emit(AuthSuccess());
     } catch (e) {

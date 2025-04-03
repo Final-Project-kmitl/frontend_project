@@ -25,6 +25,7 @@ class apiServiceProduct implements ProductDatasource {
     try {
       List<ProductRelateModel> productRelate = [];
       // 🔹 ดึงข้อมูลสินค้า
+      print("${AppUrl.product_detail}/$productId");
       final productRes = await dio.get(
         "${AppUrl.product_detail}/$productId",
       );
